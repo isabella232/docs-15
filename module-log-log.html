@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Class: log | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -56,65 +56,1127 @@
 
 
 
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="module-log.html">log</a>~</span>log</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id="log">
+            <span class="type-signature"></span>new log<span class="signature">(args)</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="utils_log.js.html">utils/log.js</a></code>,
+                <code><a href="utils_log.js.html#line97">line 97</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Logs plain debug messages. Similar to <code>console.log</code>.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Mixed></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>One or more messages or objects that should be logged.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
     
 
 
+<dl class="details">
 
+    
 
+    
 
+    
 
+    
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
 
 
     
 
+</dd>
 
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+
+<dt>
+<h4 class="name" id=".levels">
+    <span class="type-signature"><span class="icon green">static</span> </span>levels<span class="type-signature"> :Object</span>
+    
+    <div class="container-source members">
+        <code><a href="utils_log.js.html">utils/log.js</a></code>,
+        <code><a href="utils_log.js.html#line118">line 118</a></code>
+    </div>
+    
+</h4>
 
 
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Enumeration of available logging levels, where the keys are the level names
+and the values are <code>|</code>-separated strings containing logging methods allowed
+in that logging level. These strings are used to create a regular expression
+matching the function name being called.</p>
+<p>Levels provided by video.js are:</p>
+<ul>
+<li><code>off</code>: Matches no calls. Any value that can be cast to <code>false</code> will have
+this effect. The most restrictive.</li>
+<li><code>all</code> (default): Matches only Video.js-provided functions (<code>log</code>,
+<code>log.warn</code>, and <code>log.error</code>).</li>
+<li><code>warn</code>: Matches <code>log.warn</code> and <code>log.error</code> calls.</li>
+<li><code>error</code>: Matches only <code>log.error</code> calls.</li>
+</ul>
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Object</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id=".error">
+            <span class="type-signature"><span class="icon green">static</span> </span>error<span class="signature">(args)</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="utils_log.js.html">utils/log.js</a></code>,
+                <code><a href="utils_log.js.html#line193">line 193</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Logs error messages. Similar to <code>console.error</code>.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Mixed></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>One or more messages or objects that should be logged as an error</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id=".history">
+            <span class="type-signature"><span class="icon green">static</span> </span>history<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span>
+            
+            <div class="container-source members">
+                <code><a href="utils_log.js.html">utils/log.js</a></code>,
+                <code><a href="utils_log.js.html#line156">line 156</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Returns an array containing everything that has been logged to the history.</p>
+<p>This array is a shallow clone of the internal history record. However, its
+contents are <em>not</em> cloned; so, mutating objects inside this array will
+mutate them in history.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Array</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id=".history.clear">
+            <span class="type-signature"><span class="icon green">static</span> </span>history.clear<span class="signature">()</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="utils_log.js.html">utils/log.js</a></code>,
+                <code><a href="utils_log.js.html#line162">line 162</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Clears the internal history tracking, but does not prevent further history
+tracking.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id=".history.disable">
+            <span class="type-signature"><span class="icon green">static</span> </span>history.disable<span class="signature">()</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="utils_log.js.html">utils/log.js</a></code>,
+                <code><a href="utils_log.js.html#line171">line 171</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Disable history tracking if it is currently enabled.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id=".history.enable">
+            <span class="type-signature"><span class="icon green">static</span> </span>history.enable<span class="signature">()</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="utils_log.js.html">utils/log.js</a></code>,
+                <code><a href="utils_log.js.html#line181">line 181</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Enable history tracking if it is currently disabled.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id=".level">
+            <span class="type-signature"><span class="icon green">static</span> </span>level<span class="signature">(lvl<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span>
+            
+            <div class="container-source members">
+                <code><a href="utils_log.js.html">utils/log.js</a></code>,
+                <code><a href="utils_log.js.html#line137">line 137</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Get or set the current logging level. If a string matching a key from
+log.levels is provided, acts as a setter. Regardless of argument,
+returns the current logging level.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lvl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Pass to set a new logging level.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">string</span>
+
+
+
+
+
+- <p>The current logging level.</p>
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id=".warn">
+            <span class="type-signature"><span class="icon green">static</span> </span>warn<span class="signature">(args)</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="utils_log.js.html">utils/log.js</a></code>,
+                <code><a href="utils_log.js.html#line201">line 201</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Logs warning messages. Similar to <code>console.warn</code>.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Mixed></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>One or more messages or objects that should be logged as a warning.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -131,7 +1193,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = 'module:log~log_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

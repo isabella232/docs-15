@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: control-bar/mute-toggle.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,151 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file mute-toggle.js
+ */
+import Button from '../button';
+import Component from '../component';
+import * as Dom from '../utils/dom.js';
+import checkVolumeSupport from './volume-control/check-volume-support';
+
+/**
+ * A button component for muting the audio.
+ *
+ * @extends Button
+ */
+class MuteToggle extends Button {
+
+  /**
+   * Creates an instance of this class.
+   *
+   * @param {Player} player
+   *        The `Player` that this class should be attached to.
+   *
+   * @param {Object} [options]
+   *        The key/value store of player options.
+   */
+  constructor(player, options) {
+    super(player, options);
+
+    // hide this control if volume support is missing
+    checkVolumeSupport(this, player);
+
+    this.on(player, ['loadstart', 'volumechange'], this.update);
+  }
+
+  /**
+   * Builds the default DOM `className`.
+   *
+   * @return {string}
+   *         The DOM `className` for this object.
+   */
+  buildCSSClass() {
+    return `vjs-mute-control ${super.buildCSSClass()}`;
+  }
+
+  /**
+   * This gets called when an `MuteToggle` is "clicked". See
+   * {@link ClickableComponent} for more detailed information on what a click can be.
+   *
+   * @param {EventTarget~Event} [event]
+   *        The `keydown`, `tap`, or `click` event that caused this function to be
+   *        called.
+   *
+   * @listens tap
+   * @listens click
+   */
+  handleClick(event) {
+    const vol = this.player_.volume();
+    const lastVolume = this.player_.lastVolume_();
+
+    if (vol === 0) {
+      this.player_.volume(lastVolume);
+      this.player_.muted(false);
+    } else {
+      this.player_.muted(this.player_.muted() ? false : true);
+    }
+  }
+
+  /**
+   * Update the `MuteToggle` button based on the state of `volume` and `muted`
+   * on the player.
+   *
+   * @param {EventTarget~Event} [event]
+   *        The {@link Player#loadstart} event if this function was called
+   *        through an event.
+   *
+   * @listens Player#loadstart
+   * @listens Player#volumechange
+   */
+  update(event) {
+    this.updateIcon_();
+    this.updateControlText_();
+  }
+
+  /**
+   * Update the appearance of the `MuteToggle` icon.
+   *
+   * Possible states (given `level` variable below):
+   * - 0: crossed out
+   * - 1: zero bars of volume
+   * - 2: one bar of volume
+   * - 3: two bars of volume
+   *
+   * @private
+   */
+  updateIcon_() {
+    const vol = this.player_.volume();
+    let level = 3;
+
+    if (vol === 0 || this.player_.muted()) {
+      level = 0;
+    } else if (vol &lt; 0.33) {
+      level = 1;
+    } else if (vol &lt; 0.67) {
+      level = 2;
+    }
+
+    // TODO improve muted icon classes
+    for (let i = 0; i &lt; 4; i++) {
+      Dom.removeClass(this.el_, `vjs-vol-${i}`);
+    }
+    Dom.addClass(this.el_, `vjs-vol-${level}`);
+  }
+
+  /**
+   * If `muted` has changed on the player, update the control text
+   * (`title` attribute on `vjs-mute-control` element and content of
+   * `vjs-control-text` element).
+   *
+   * @private
+   */
+  updateControlText_() {
+    const soundOff = this.player_.muted() || this.player_.volume() === 0;
+    const text = soundOff ? 'Unmute' : 'Mute';
+
+    if (this.controlText() !== text) {
+      this.controlText(text);
+    }
+  }
+
+}
+
+/**
+ * The text that should display over the `MuteToggle`s controls. Added for localization.
+ *
+ * @type {string}
+ * @private
+ */
+MuteToggle.prototype.controlText_ = 'Mute';
+
+Component.registerComponent('MuteToggle', MuteToggle);
+export default MuteToggle;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +220,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: languages | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,102 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>languages</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
+        <article class="readme">
+            <h1>Languages</h1><p>Multiple language support allows for users of non-English locales to natively interact with the Video.js player.</p>
+<p>For an up-to-date list of the languages Video.js supports, see the <a href="https://github.com/videojs/video.js/tree/master/lang">languages folder (<code>lang</code>)</a>. These JSON files are converted to JavaScript during the Video.js build process.</p>
 <h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#using-videojs-languages">Using Video.js Languages</a></li>
+<li><a href="#contributing-to-videojs-translations">Contributing to Video.js Translations</a><ul>
+<li><a href="#json-format">JSON Format</a></li>
+<li><a href="#file-naming">File Naming</a></li>
+<li><a href="#updating-an-existing-translation">Updating an Existing Translation</a></li>
+<li><a href="#writing-a-new-translation">Writing a New Translation</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#advanced-language-usage">Advanced Language Usage</a><ul>
+<li><a href="#adding-languages-via-the-api">Adding Languages via the API</a></li>
+<li><a href="#per-player-languages">Per-Player Languages</a></li>
+<li><a href="#setting-default-player-language">Setting Default Player Language</a></li>
+<li><a href="#determining-player-language">Determining Player Language</a><ul>
+<li><a href="#internal-language-selection">Internal Language Selection</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#api-docs">API Docs</a></li>
+<li><a href="#references">References</a></li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
-
-
-
+<h2>Using Video.js Languages</h2><p>Video.js ships with multiple translations (in <code>dist/lang/</code>) in JavaScript files. Each of these files can be included in a web page to provide support for that language in <em>all</em> Video.js players:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;//example.com/path/to/video.min.js&quot;>&lt;/script>
+&lt;script src=&quot;//example.com/path/to/lang/es.js&quot;>&lt;/script></code></pre><h2>Contributing to Video.js Translations</h2><p>We welcome new translations and improvements to existing ones! Please see the <a href="../../CONTRIBUTING.md">contributing document</a> to get started contributing to Video.js and continue reading for specifics on how to contribute to translations of Video.js...</p>
+<h3>JSON Format</h3><p>Video.js uses a JSON object to describe a language, where the keys are English and the values are the target language. For example, a Spanish translation might look like this:</p>
+<pre class="prettyprint source lang-JSON"><code>{
+  &quot;Play&quot;: &quot;Reproducción&quot;,
+  &quot;Pause&quot;: &quot;Pausa&quot;,
+  &quot;Current Time&quot;: &quot;Tiempo reproducido&quot;,
+  &quot;Duration Time&quot;: &quot;Duración total&quot;,
+  &quot;Remaining Time&quot;: &quot;Tiempo restante&quot;,
+  ...
+}</code></pre><h3>File Naming</h3><p>Translations are always found in the <code>lang/</code> directory.</p>
+<p>Each file's name should be the <a href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">standard language code</a> that is most appropriate. For example, &quot;es&quot; for Spanish or &quot;zh-CN&quot; for Chinese.</p>
+<p>Finally, each file's extension is always <code>.json</code>.</p>
+<h3>Updating an Existing Translation</h3><p>If there is a <a href="../translations-needed.md">missing translation</a>, mistake, or room for improvement in an existing translation, don't hesitate to open a pull request!</p>
+<ol>
+<li>Edit the relevant JSON file and make the necessary changes.</li>
+<li>Verify the language compiles by running <code>grunt dist</code>.</li>
+<li>Verify the translation appears properly in the player UI.</li>
+<li>Run <code>grunt check-translations</code> to update the <a href="../translations-needed.md">missing translation document</a>.</li>
+<li>Commit and open a pull request on GitHub.</li>
+</ol>
+<h3>Writing a New Translation</h3><p>The process for writing an entirely new translation is virtually identical to the process for <a href="#updating-an-existing-translation">updating an existing translation</a> except that the new translation JSON file needs to be created.</p>
+<p>The template for new language files is the English file (<a href="https://github.com/videojs/video.js/tree/master/lang/en.json">lang/en.json</a>). This file is always up-to-date with strings that need translations.</p>
+<p>The first step to writing a new translation is to copy the English file:</p>
+<pre class="prettyprint source lang-sh"><code>cp lang/en.json lang/${NEW_LANG_CODE}.json</code></pre><p>Otherwise, the process is the same as <a href="#updating-an-existing-translation">updating an existing translation</a>.</p>
+<h2>Advanced Language Usage</h2><p>The instructions above for <a href="#using-videojs-languages">using Video.js languages</a> should be sufficient for the majority of use-cases. However, languages can be provided at runtime.</p>
+<p>In each case, these custom language definitions <em>take precedence over any Video.js-provided languages!</em></p>
+<h3>Adding Languages via the API</h3><p>In addition to the stand-alone scripts provided by Video.js, the API supports manual definition of new languages via the <code>addLanguage</code> method. It takes two arguments: the <a href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">standard language code</a> and a <a href="#json-format">language definition object</a>.</p>
+<pre class="prettyprint source lang-js"><code>videojs.addLanguage('es', {
+  'Play': 'Reproducción',
+  'Pause': 'Pausa',
+  'Current Time': 'Tiempo reproducido',
+  'Duration Time': 'Duración total',
+  'Remaining Time': 'Tiempo restante',
+  ...
+});</code></pre><h3>Per-Player Languages</h3><p>In addition to providing languages to Video.js itself, individual <code>Player</code> instances can be provided custom language support via <a href="options.md#languages">the <code>languages</code> option</a>:</p>
+<pre class="prettyprint source lang-js"><code>// Provide a custom definition of Spanish to this player.
+videojs('my-player', {
+  languages: {
+    es: {...}
+  }
+});</code></pre><h3>Setting Default Player Language</h3><p>Player instances can also have a default language via <a href="options.md#language">the <code>language</code> option</a>:</p>
+<pre class="prettyprint source lang-js"><code>// Set the default language to Spanish for this player.
+videojs('my-player', {
+  language: 'es'
+});</code></pre><p>Additionally, the <code>language</code> method of the player can be used to set the language after instantiation (e.g., <code>language('es')</code>). However, this is not recommended as it does not update the UI in place. <em>Setting the language via options is always preferred.</em></p>
+<h3>Determining Player Language</h3><p>The player language is set to one of the following in descending priority:</p>
+<ul>
+<li>The language <a href="#setting-default-player-language">specified in options</a></li>
+<li>The language specified by the closest element with a <code>lang</code> attribute. This could be the player itself or a parent element. Usually, the document language is specified on the <code>&lt;html&gt;</code> tag.</li>
+<li>Browser language preference; the first language if more than one is configured</li>
+<li>English</li>
+</ul>
+<h4>Internal Language Selection</h4><ul>
+<li>Language codes are considered case-insensitively (e.g. <code>en-US</code> == <code>en-us</code>).</li>
+<li>If there is no match for a language code with a subcode (e.g. <code>en-us</code>), a match for the primary code (e.g. <code>en</code>) is used if available.</li>
+</ul>
+<h2>References</h2><p>For information on translation/localization in plugins, see <a href="plugins.md">the plugins guide</a>.</p>
+<p>Standard languages codes <a href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">are defined by the IANA</a>.</p>
+<p>For all existing/supported languages, please see the <a href="https://github.com/videojs/video.js/tree/master/lang">languages lolder (<code>lang/</code>)</a> folder located in the project root.</p>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +165,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

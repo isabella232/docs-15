@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: player-workflows | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,246 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>player-workflows</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
+        <article class="readme">
+            <h1>Player Workflows</h1><p>This document outlines many considerations for using Video.js for advanced player workflows. Be sure to read <a href="setup.md">the setup guide</a> first!</p>
 <h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#accessing-a-player-that-has-already-been-created-on-a-page">Accessing a player that has already been created on a page</a></li>
+<li><a href="#removing-players">Removing Players</a><ul>
+<li><a href="#dispose">dispose()</a></li>
+<li><a href="#signs-of-an-undisposed-player">Signs of an Undisposed Player</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#showing-and-hiding-a-player">Showing and Hiding a Player</a></li>
+<li><a href="#changing-the-volume-of-a-player">Changing the volume of a player</a></li>
+<li><a href="#making-the-player-fullscreen">Making the player fullscreen</a></li>
+<li><a href="#using-playback-information-functions">Using Playback information functions</a></li>
+<li><a href="#dealing-with-the-source-or-the-poster-on-the-player">Dealing with the source or the poster on the player</a></li>
+<li><a href="#accesing-the-tech-on-the-player">Accesing the Tech on the player</a></li>
+<li><a href="#using-videojs-with">Using Video.js with...</a><ul>
+<li><a href="#jquery">jQuery</a></li>
+<li><a href="#react">React</a></li>
+<li><a href="#ember">Ember</a></li>
+<li><a href="#angular">Angular</a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<h2>Accessing a player that has already been created on a page</h2><p>After an instance has been created it can be accessed globally in two ways:</p>
+<ol>
+<li>By calling <code>videojs('example_video_id');</code></li>
+<li>By using it directly via  <code>videojs.players.example_video_id;</code></li>
+</ol>
+<h2>Removing Players</h2><p>No matter the term used for it, web applications are becoming common. Not everything is a static, load-once-and-done web page anymore! This means that developers need to be able to manage the full lifecycle of a video player - from creation to destruction. Video.js supports player removal through the <code>dispose()</code> method.</p>
+<h3><a href="http://docs.videojs.com/docs/api/player.html#Methodsdispose"><code>dispose()</code></a></h3><p>This method is available on all Video.js players and <a href="http://docs.videojs.com/docs/api/component.html#Methodsdispose">components</a>. It is <em>the only</em> supported method of removing a Video.js player from both the DOM and memory. For example, the following code sets up a player and then disposes it when media playback is complete:</p>
+<pre class="prettyprint source lang-js"><code>var player = videojs('my-player');
 
+player.on('ended', function() {
+  this.dispose();
+});</code></pre><p>Calling <code>dispose()</code> will have a few effects:</p>
+<ol>
+<li>Trigger a <code>&quot;dispose&quot;</code> event on the player, allowing for any custom cleanup tasks that need to be run by your integration.</li>
+<li>Remove all event listeners from the player.</li>
+<li>Remove the player's DOM element(s).</li>
+</ol>
+<p>Additionally, these actions are recursively applied to <em>all</em> the player's child components.</p>
+<blockquote>
+<p><strong>Note</strong>: Do <em>not</em> remove players via standard DOM removal methods: this will leave listeners and other objects in memory that you might not be able to clean up!</p>
+</blockquote>
+<h3>Signs of an Undisposed Player</h3><p>Seeing an error such as:</p>
+<pre class="prettyprint source lang-console"><code>TypeError: this.el_.vjs_getProperty is not a function</code></pre><p>or</p>
+<pre class="prettyprint source lang-console"><code>TypeError: Cannot read property 'vdata1234567890' of null</code></pre><p>Suggests that a player or component was removed from the DOM without using <code>dispose()</code>. It usually means something tried to trigger an event on it or call a method on it.</p>
+<h2>Showing and Hiding a Player</h2><p>It is not recommended that you attempt to toggle the visibility or display of a Video.js player. Doing so can be particularly problematic when it comes to the Flash tech. Instead, players should be created and <a href="#removing-players">disposed</a> as needed.</p>
+<p>This is relevant to use cases such as displaying a player in a modal/overlay. Rather than keeping a hidden Video.js player in a DOM element, it's recommended that you create the player when the modal opens and dispose it when the modal closes.</p>
+<p>This is particularly relevant where memory/resource usage is concerned (e.g. mobile devices).</p>
+<p>Depending on the libraries/frameworks in use, an implementation might look something like this:</p>
+<pre class="prettyprint source lang-js"><code>modal.on('show', function() {
+  var videoEl = modal.findEl('video');
+  modal.player = videojs(videoEl);
+});
 
+modal.on('hide', function() {
+  modal.player.dispose();
+});</code></pre><h2>Changing the volume of a player</h2><p>Volume for a player can be changed through the <code>volume</code> function on a player. The volume function accepts a number from 0-1. Calling it without an argument will return the current volume.</p>
+<p>Example</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
 
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  // get
+  var howLoudIsIt = myPlayer.volume();
+  // set
+  myPlayer.volume(0.5); // Set volume to half
+});</code></pre><p>Volume can also be muted (without actually changing the volume value) using the <code>muted</code> function. Calling it without an argument will return the current status of muted on the player.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  // get, should be false
+  console.log(myPlayer.muted());
+  // set to true
+  myPlayer.muted(true);
+  // get should be true
+  console.log(myPlayer.muted());
+});</code></pre><h2>Making the player fullscreen</h2><p>To check if the player is currently fullscreen call the <code>isFullscreen</code> function on a player like so.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  // get, should be false
+  console.log(myPlayer.isFullscreen());
+
+  // set, tell the player it's in fullscreen
+  myPlayer.isFullscreen(true);
+
+  // get, should be true
+  console.log(myPlayer.isFullscreen());
+});</code></pre><p>To request that the player enter fullscreen call <code>requestFullscreen</code>.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  myPlayer.requestFullscreen();
+});</code></pre><p>To exit fullscreen call <code>exitFullscreen</code></p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  myPlayer.requestFullscreen();
+  myPlayer.exitFullscreen();
+});</code></pre><h2>Using Playback information functions</h2><p><code>play</code> can be used to start playback on a player that has a source.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  myPlayer.play();
+});</code></pre><p><code>pause</code> can be used to pause playback on a player that is playing.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  myPlayer.play();
+  myPlayer.pause();
+});</code></pre><p><code>paused</code> can be used to determine if a player is currently paused.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+
+myPlayer.ready(function() {
+  // true
+  console.log(myPlayer.paused());
+  // false
+  console.log(!myPlayer.paused());
+
+  myPlayer.play();
+  // false
+  console.log(myPlayer.paused());
+  // true
+  console.log(!myPlayer.paused());
+
+  myPlayer.pause();
+  // true
+  console.log(myPlayer.paused());
+  // false
+  console.log(!myPlayer.paused());
+});</code></pre><p><code>currentTime</code> will give you the currentTime (in seconds) that playback is currently occuring at.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  // set current time to 2 minutes into the video
+  myPlayer.currentTime(120);
+
+  // get the current time, should be 120 seconds
+  var whereYouAt = myPlayer.currentTime();
+});</code></pre><p><code>duration</code> will give you the total duration of the video that is playing</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  var lengthOfVideo = myPlayer.duration();
+});</code></pre><p><code>remainingTime</code> will give you the seconds that are remaing in the video.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+   myPlayer.currentTime(10);
+
+   // should be 10 seconds less than duration
+   console.log(myPlayer.remainingTime());
+});</code></pre><p><code>buffered</code> will give you a timeRange object representing the current ranges of time that are ready to be played at a future time.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  var bufferedTimeRange = myPlayer.buffered();
+
+  // number of different ranges of time have been buffered.
+  // Usually 1
+  var numberOfRanges = bufferedTimeRange.length,
+
+  // Time in seconds when the first range starts.
+  // Usually 0
+  var firstRangeStart = bufferedTimeRange.start(0),
+
+  // Time in seconds when the first range ends
+  var firstRangeEnd = bufferedTimeRange.end(0),
+
+  // Length in seconds of the first time range
+  var firstRangeLength = firstRangeEnd - firstRangeStart;
+});</code></pre><p><code>bufferedPercent</code> will give you the the current percentage of the video that is buffered.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+  // example 0.11 aka 11%
+  var howMuchIsDownloaded = myPlayer.bufferedPercent();
+});</code></pre><h2>Dealing with the source or the poster on the player</h2><p>Passing a source to the player via the API. (this can also be done using options)</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);</code></pre><p><strong>Source Object (or element):</strong> A javascript object containing information
+about the source file. Use this method if you want the player to determine if
+it can support the file using the type information.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src({type: &quot;video/mp4&quot;, src: &quot;http://www.example.com/path/to/video.mp4&quot;});</code></pre><p><strong>Array of Source Objects:</strong> To provide multiple versions of the source so
+that it can be played using HTML5 across browsers you can use an array of
+source objects. Video.js will detect which version is supported and load that
+file.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src([
+  {type: &quot;video/mp4&quot;, src: &quot;http://www.example.com/path/to/video.mp4&quot;},
+  {type: &quot;video/webm&quot;, src: &quot;http://www.example.com/path/to/video.webm&quot;},
+  {type: &quot;video/ogg&quot;, src: &quot;http://www.example.com/path/to/video.ogv&quot;}
+]);</code></pre><p>Changing or setting the poster via the API. (this can also be done with options)</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('example_video_1');
+
+// set
+myPlayer.poster('http://example.com/myImage.jpg');
+
+// get
+console.log(myPlayer.poster());
+// 'http://example.com/myImage.jpg'</code></pre><h2>Accesing the Tech on the player</h2><p>The tech on the player can only be accesed by pasing <code>{IWillNotUseThisInPlugins: true}</code> into the <code>tech()</code>
+function on the player.</p>
+<pre class="prettyprint source lang-js"><code>var myPlayer = videojs('some-player-id');
+
+myPlayer.src(&quot;http://www.example.com/path/to/video.mp4&quot;);
+myPlayer.ready(function() {
+   // function call throws an error if we
+    // dont add {IWillNotUseThisInPlugins: true}
+   var tech = myPlayer.tech({IWillNotUseThisInPlugins: true});
+});</code></pre><h2>Using Video.js with...</h2><p>Coming soon...</p>
+<h3>jQuery</h3><h3>React</h3><p>See <a href="./react.md">ReactJS integration example</a></p>
+<h3>Ember</h3><h3>Angular</h3>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +309,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

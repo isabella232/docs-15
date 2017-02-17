@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: tracks/track-list.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,201 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file track-list.js
+ */
+import EventTarget from '../event-target';
+import * as browser from '../utils/browser.js';
+import document from 'global/document';
+
+/**
+ * Common functionaliy between {@link TextTrackList}, {@link AudioTrackList}, and
+ * {@link VideoTrackList}
+ *
+ * @extends EventTarget
+ */
+class TrackList extends EventTarget {
+  /**
+   * Create an instance of this class
+   *
+   * @param {Track[]} tracks
+   *        A list of tracks to initialize the list with.
+   *
+   * @param {Object} [list]
+   *        The child object with inheritance done manually for ie8.
+   *
+   * @abstract
+   */
+  constructor(tracks = [], list = null) {
+    super();
+    if (!list) {
+      list = this; // eslint-disable-line
+      if (browser.IS_IE8) {
+        list = document.createElement('custom');
+        for (const prop in TrackList.prototype) {
+          if (prop !== 'constructor') {
+            list[prop] = TrackList.prototype[prop];
+          }
+        }
+      }
+    }
+
+    list.tracks_ = [];
+
+    /**
+     * @memberof TrackList
+     * @member {number} length
+     *         The current number of `Track`s in the this Trackist.
+     * @instance
+     */
+    Object.defineProperty(list, 'length', {
+      get() {
+        return this.tracks_.length;
+      }
+    });
+
+    for (let i = 0; i &lt; tracks.length; i++) {
+      list.addTrack(tracks[i]);
+    }
+
+    // must return the object, as for ie8 it will not be this
+    // but a reference to a document object
+    return list;
+  }
+
+  /**
+   * Add a {@link Track} to the `TrackList`
+   *
+   * @param {Track} track
+   *        The audio, video, or text track to add to the list.
+   *
+   * @fires TrackList#addtrack
+   */
+  addTrack(track) {
+    const index = this.tracks_.length;
+
+    if (!('' + index in this)) {
+      Object.defineProperty(this, index, {
+        get() {
+          return this.tracks_[index];
+        }
+      });
+    }
+
+    // Do not add duplicate tracks
+    if (this.tracks_.indexOf(track) === -1) {
+      this.tracks_.push(track);
+      /**
+       * Triggered when a track is added to a track list.
+       *
+       * @event TrackList#addtrack
+       * @type {EventTarget~Event}
+       * @property {Track} track
+       *           A reference to track that was added.
+       */
+      this.trigger({
+        track,
+        type: 'addtrack'
+      });
+    }
+  }
+
+  /**
+   * Remove a {@link Track} from the `TrackList`
+   *
+   * @param {Track} rtrack
+   *        The audio, video, or text track to remove from the list.
+   *
+   * @fires TrackList#removetrack
+   */
+  removeTrack(rtrack) {
+    let track;
+
+    for (let i = 0, l = this.length; i &lt; l; i++) {
+      if (this[i] === rtrack) {
+        track = this[i];
+        if (track.off) {
+          track.off();
+        }
+
+        this.tracks_.splice(i, 1);
+
+        break;
+      }
+    }
+
+    if (!track) {
+      return;
+    }
+
+    /**
+     * Triggered when a track is removed from track list.
+     *
+     * @event TrackList#removetrack
+     * @type {EventTarget~Event}
+     * @property {Track} track
+     *           A reference to track that was removed.
+     */
+    this.trigger({
+      track,
+      type: 'removetrack'
+    });
+  }
+
+  /**
+   * Get a Track from the TrackList by a tracks id
+   *
+   * @param {String} id - the id of the track to get
+   * @method getTrackById
+   * @return {Track}
+   * @private
+   */
+  getTrackById(id) {
+    let result = null;
+
+    for (let i = 0, l = this.length; i &lt; l; i++) {
+      const track = this[i];
+
+      if (track.id === id) {
+        result = track;
+        break;
+      }
+    }
+
+    return result;
+  }
+}
+
+/**
+ * Triggered when a different track is selected/enabled.
+ *
+ * @event TrackList#change
+ * @type {EventTarget~Event}
+ */
+
+/**
+ * Events that can be called with on + eventName. See {@link EventHandler}.
+ *
+ * @property {Object} TrackList#allowedEvents_
+ * @private
+ */
+TrackList.prototype.allowedEvents_ = {
+  change: 'change',
+  addtrack: 'addtrack',
+  removetrack: 'removetrack'
+};
+
+// emulate attribute EventHandler support to allow for feature detection
+for (const event in TrackList.prototype.allowedEvents_) {
+  TrackList.prototype['on' + event] = null;
+}
+
+export default TrackList;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +270,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

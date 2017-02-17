@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: troubleshooting | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,100 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>troubleshooting</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+        <article class="readme">
+            <h1>Troubleshooting</h1><h2>Table of Contents</h2><ul>
+<li><a href="#problems-with-media-formats">Problems with media formats</a><ul>
+<li><a href="#choosing-a-video-format">Choosing a video format</a><ul>
+<li><a href="#i-want-to-have-a-single-source-and-dont-care-about-liveadaptive-streaming">I want to have a single source and don't care about live/adaptive streaming:</a></li>
+<li><a href="#i-need-adaptive-streaming-or-live-streaming">I need adaptive streaming or live streaming</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
+<li><a href="#make-sure-you-are-using-formats-that-videojs-can-play">Make sure you are using formats that Video.js can play:</a></li>
+<li><a href="#make-sure-that-the-codec-used-in-the-file-container-is-supported">Make sure that the codec used in the file container is supported:</a></li>
+<li><a href="#if-you-are-using-flash-videos">If you are using Flash videos:</a></li>
 </ul>
 </li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#problems-when-hosting-media">Problems when hosting media</a></li>
+<li><a href="#problems-with-fullscreen">Problems with fullscreen</a></li>
+<li><a href="#problems-with-playback">Problems with playback</a></li>
+<li><a href="#videojs-errors">Video.js Errors</a><ul>
+<li><a href="#vdata123456-errors">vdata123456 errors</a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
+<h2>Problems with media formats</h2><h3>Choosing a video format</h3><h4>I want to have a single source and don't care about live/adaptive streaming:</h4><p>Most browsers now play MP4 with h264 video. If you want to have a single source, and neither live streaming
+nor adaptive streaming is a consideration, MP4 with h264 video and acc audio is a good choice.</p>
+<h4>I need adaptive streaming or live streaming</h4><p>Use HLS with <a href="https://github.com/videojs/videojs-contrib-hls">videojs-contrib-hls</a> or
+Use Dash with <a href="https://github.com/videojs/videojs-contrib-dash">videojs-contrib-dash</a>.
+HLS is more convenient as mobile browsers have native support.</p>
+<h3>Make sure you are using formats that Video.js can play:</h3><ul>
+<li>Does your browser/OS support the type of media that you are trying to play?</li>
+<li>Do you have a Video.js plugin that will add support for a media format to Video.js? For example:<ul>
+<li><a href="https://github.com/videojs/videojs-youtube">videojs-youtube</a></li>
+<li><a href="https://github.com/videojs/videojs-contrib-hls">videojs-contrib-hls</a></li>
+<li><a href="https://github.com/videojs/videojs-contrib-dash">videojs-contrib-dash</a></li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
-
-
-
+</li>
+<li>Verify that you are using the correct <a href="http://www.iana.org/assignments/media-types/media-types.xhtml#video">mime-type/content-type</a> for your videos.
+This is used to determine if Video.js can play a certain type of media.</li>
+</ul>
+<h3>Make sure that the codec used in the file container is supported:</h3><ul>
+<li>MP4 in browsers typically only supports h264 video and MP3 or AAC audio</li>
+<li>Some low end phones save video in 3GP format but give it an MP4 extension. These files will not play.</li>
+</ul>
+<h3>If you are using Flash videos:</h3><ul>
+<li>Make sure that Flash is installed</li>
+<li>Make sure the Flash tech is included with Video.js (in <code>video.js &gt;= v6.0.0</code> it won't be by default, see <a href="https://github.com/videojs/videojs-flash">videojs-flash</a>)</li>
+<li>Flash media include RTMP streams and FLV format media.</li>
+<li>SWF is not a media format</li>
+</ul>
+<h2>Problems when hosting media</h2><ul>
+<li>Your server must support byte-range requests as Chrome and Safari rely on them:<ul>
+<li>Most servers support this by default.</li>
+<li>If you are proxying the media files via a server side script (PHP), this script must implement ranges. PHP does not do this by default.</li>
+<li>The impact of not doing this ranges from seeking being broken to no playback at all (on iOS).</li>
+</ul>
+</li>
+<li>Your server must return the correct <a href="http://www.iana.org/assignments/media-types/media-types.xhtml#video">mime-type/content-type</a> for the media being sent.</li>
+<li>Your server must implement <a href="http://enable-cors.org/">CORS (cross-origin resource)</a> headers if:<ul>
+<li>You are using <a href="https://github.com/videojs/videojs-contrib-hls">videojs-contrib-hls</a>, <a href="https://github.com/videojs/videojs-contrib-dash">videojs-contrib-dash</a> and your media is served from a different domain than your page.</li>
+<li>You are using <a href="text-tracks.md">text tracks</a> (captions, subtitles, etc.) and they are being served from a different domain than your page.</li>
+</ul>
+</li>
+</ul>
+<h2>Problems with fullscreen</h2><ul>
+<li>If your player is in an iframe, the parent iframes must have the following attributes for fullscreen to be allowed:<ul>
+<li><code>allowfullscreen</code></li>
+<li><code>webkitallowfullscreen</code></li>
+<li><code>mozallowfullscreen</code></li>
+</ul>
+</li>
+</ul>
+<h2>Problems with playback</h2><ul>
+<li>Make sure that the media host supports byte-range requests, this could be breaking playback. See <a href="#problems-when-hosting-media">Problems when hosting media</a> for more info.</li>
+<li>If your media is taking a long time to start playback or the entire mediadownloads before playback:<ul>
+<li>It is likely that metadata for the media has not been included at the start of the media. In MP4 terms this is called
+the &quot;moov atom&quot;. Many encoders are configured to do this by default, others may require you to choose
+a &quot;fast start&quot; or &quot;optimize for streaming&quot; option.</li>
+</ul>
+</li>
+</ul>
+<h2>Video.js Errors</h2><h3>vdata123456 errors</h3><p>This error is thrown when an element that is associated with a component is removed
+from the DOM but the event handlers associated with the element are not removed. This
+is almost always due to event listeners not being disposed when dispose is called on
+a component.</p>
+<p>To fix this issue please make sure that all event listeners are cleaned up on dispose.</p>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +163,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

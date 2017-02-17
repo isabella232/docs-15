@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: event-target | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,99 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>event-target</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+        <article class="readme">
+            <h1>Event Target</h1><h2>Table of Contents</h2><ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#on-and-addeventlistener">on() and addEventListener()</a></li>
+<li><a href="#off-and-removeeventlistener">off() and removeEventListener()</a></li>
+<li><a href="#one">one()</a></li>
+<li><a href="#trigger-and-dispatchevent">trigger() and dispatchEvent()</a></li>
 </ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<h2>Overview</h2><p>Events in video.js are setup so that they mimic the DOM API that is used on object, but also have helpful shorthand functions with the same functionality.</p>
+<h2><code>on()</code> and <code>addEventListener()</code></h2><p>This function is used to add an event listener to an EventTarget.</p>
+<pre class="prettyprint source lang-js"><code>var foo = new EventTarget();
+var handleBar = function() {
+  console.log('bar was triggered');
+};
 
+foo.on('bar', handleBar);
 
+// This causes any `event listeners` for the `bar` event to get called
+// see <a href="EventTarget.html#trigger">EventTarget#trigger</a> for more information
+foo.trigger('bar');
+// logs 'bar was triggered'</code></pre><h2><code>off()</code> and <code>removeEventListener()</code></h2><p>This function is used to remove an listener function from an EventTarget.</p>
+<pre class="prettyprint source lang-js"><code>var foo = new EventTarget();
+var handleBar = function() {
+  console.log('bar was triggered');
+};
 
+// adds an `event listener` for the `bar` event
+// see <a href="EventTarget.html#on">EventTarget#on</a> for more info
+foo.on('bar', handleBar);
+
+// runs all `event listeners` for the `bar` event
+// see <a href="EventTarget.html#trigger">EventTarget#trigger</a> for more info
+foo.trigger('bar');
+// logs 'bar was triggered'
+
+foo.off('bar', handleBar);
+foo.trigger('bar');
+// does nothing</code></pre><h2><code>one()</code></h2><p>This function is used to only have an event listener called once and never again.</p>
+<p>Using <code>on()</code> and <code>off()</code> to mimic <code>one()</code> (not recommended)</p>
+<pre class="prettyprint source lang-js"><code>var foo = new EventTarget();
+var handleBar = function() {
+  console.log('bar was triggered');
+  // after the first trigger remove this handler
+  foo.off('bar', handleBar);
+};
+
+foo.on('bar', handleBar);
+foo.trigger('bar');
+// logs 'bar was triggered'
+
+foo.trigger('bar');
+// does nothing</code></pre><p>Using <code>one()</code></p>
+<pre class="prettyprint source lang-js"><code>var foo = new EventTarget();
+var handleBar = function() {
+  console.log('bar was triggered');
+};
+
+// removed after the first trigger
+foo.one('bar', handleBar);
+foo.trigger('bar');
+// logs 'bar was triggered'
+
+foo.trigger('bar');
+// does nothing</code></pre><h2><code>trigger()</code> and <code>dispatchEvent()</code></h2><p>This function is used to trigger an event on an EventTarget which will cause all listeners to run.</p>
+<blockquote>
+<p>Note: if 'click' is in <code>EventTarget.allowedEvents_</code>, trigger will attempt to call the
+      <code>onClick</code> function if it exists.</p>
+</blockquote>
+<pre class="prettyprint source lang-js"><code>var foo = new EventTarget();
+var handleBar = function() {
+  console.log('bar was triggered');
+};
+
+foo.on('bar', handleBar);
+foo.trigger('bar');
+// logs 'bar was triggered'
+
+foo.trigger('bar');
+// logs 'bar was triggered'
+
+foo.trigger('foo');
+// does nothing</code></pre>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +162,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

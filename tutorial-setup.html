@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: setup | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,100 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>setup</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+        <article class="readme">
+            <h1>Video.js Setup</h1><h2>Table of Contents</h2><ul>
+<li><a href="#getting-videojs">Getting Video.js</a></li>
+<li><a href="#creating-a-player">Creating a Player</a><ul>
+<li><a href="#automatic-setup">Automatic Setup</a></li>
+<li><a href="#manual-setup">Manual Setup</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
+<li><a href="#options">Options</a><ul>
+<li><a href="#global-defaults">Global Defaults</a></li>
+<li><a href="#a-note-on-video-tag-attributes">A Note on &lt;video&gt; Tag Attributes</a></li>
 </ul>
 </li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#player-readiness">Player Readiness</a></li>
+<li><a href="#advanced-player-workflows">Advanced Player Workflows</a></li>
 </ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<h2>Getting Video.js</h2><p>Video.js is officially available via CDN, npm, and Bower.</p>
+<p>Video.js works out of the box with not only HTML <code>&lt;script&gt;</code> and <code>&lt;link&gt;</code> tags, but also all major bundlers/packagers/builders, such as Browserify, Node, WebPack, etc.</p>
+<p>Please refer to the <a href="http://videojs.com/getting-started/">Getting Started</a> document for details.</p>
+<h2>Creating a Player</h2><blockquote>
+<p><strong>Note:</strong> Video.js works with <code>&lt;video&gt;</code> <em>and</em> <code>&lt;audio&gt;</code> elements, but for simplicity we'll refer only to <code>&lt;video&gt;</code> elements going forward.</p>
+</blockquote>
+<p>Once you have Video.js <a href="http://videojs.com/getting-started/">loaded on your page</a>, you're ready to create a player!</p>
+<p>The core strength of Video.js is that it decorates a <a href="http://www.w3.org/TR/html5/embedded-content-0.html#the-video-element">standard <code>&lt;video&gt;</code> element</a> and emulates its associated <a href="https://www.w3.org/2010/05/video/mediaevents.html">events and APIs</a>, while providing a customizable DOM-based UI.</p>
+<p>Video.js supports all attributes of the <code>&lt;video&gt;</code> element (such as <code>controls</code>, <code>preload</code>, etc), but it also supports <a href="#options">its own options</a>. There are two ways to create a Video.js player and pass it options, but they both start with a standard <code>&lt;video&gt;</code> element with the attribute <code>class=&quot;video-js&quot;</code>:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video class=&quot;video-js&quot;>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.mp4&quot; type=&quot;video/mp4&quot;>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.webm&quot; type=&quot;video/webm&quot;>
+&lt;/video></code></pre><h3>Automatic Setup</h3><p>By default, when your web page finishes loading, Video.js will scan for media elements that have the <code>data-setup</code> attribute. The <code>data-setup</code> attribute is used to pass options to Video.js. A minimal example looks like this:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video class=&quot;video-js&quot; data-setup='{}'>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.mp4&quot; type=&quot;video/mp4&quot;>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.webm&quot; type=&quot;video/webm&quot;>
+&lt;/video></code></pre><blockquote>
+<p><strong>Note:</strong> You <em>must</em> use single-quotes with <code>data-setup</code> as it is expected to contain JSON.</p>
+</blockquote>
+<h3>Manual Setup</h3><p>On the modern web, a <code>&lt;video&gt;</code> element often does not exist when the page finishes loading. In these cases, automatic setup is not possible, but manual setup is available via <a href="http://docs.videojs.com/docs/api/video.html">the <code>videojs</code> function</a>.</p>
+<p>One way to call this function is by providing it a string matching a <code>&lt;video&gt;</code> element's <code>id</code> attribute:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video id=&quot;my-player&quot; class=&quot;video-js&quot;>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.mp4&quot; type=&quot;video/mp4&quot;>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.webm&quot; type=&quot;video/webm&quot;>
+&lt;/video></code></pre><pre class="prettyprint source lang-js"><code>videojs('my-player');</code></pre><p>However, using an <code>id</code> attribute isn't always practical; so, the <code>videojs</code> function accepts a DOM element instead:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video class=&quot;video-js&quot;>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.mp4&quot; type=&quot;video/mp4&quot;>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.webm&quot; type=&quot;video/webm&quot;>
+&lt;/video></code></pre><pre class="prettyprint source lang-js"><code>videojs(document.querySelector('.video-js'));</code></pre><h2>Options</h2><blockquote>
+<p><strong>Note:</strong> This guide only covers how to pass options during player setup. For a complete reference on <em>all</em> available options, see the <a href="options.md">options guide</a>.</p>
+</blockquote>
+<p>There are three ways to pass options to Video.js. Because Video.js decorates an HTML5 <code>&lt;video&gt;</code> element, many of the options available are also available as <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#Attributes">standard <code>&lt;video&gt;</code> tag attributes</a>:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video controls autoplay preload=&quot;auto&quot; ...></code></pre><p>Alternatively, you can use the <code>data-setup</code> attribute to pass options as <a href="http://json.org/example.html">JSON</a>. This is also how you would set options that aren't standard to the <code>&lt;video&gt;</code> element:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video data-setup='{&quot;controls&quot;: true, &quot;autoplay&quot;: false, &quot;preload&quot;: &quot;auto&quot;}'...></code></pre><p>Finally, if you're not using the <code>data-setup</code> attribute to trigger the player setup, you can pass in an object of player options as the second argument to the <code>videojs</code> function:</p>
+<pre class="prettyprint source lang-js"><code>videojs('my-player', {
+  controls: true,
+  autoplay: false,
+  preload: 'auto'
+});</code></pre><h3>Global Defaults</h3><p>Default options for all players can be found at <code>videojs.options</code> and can be changed directly. For example, to set <code>{autoplay: true}</code> for all future players:</p>
+<pre class="prettyprint source lang-js"><code>videojs.options.autoplay = true;</code></pre><h3>A Note on <code>&lt;video&gt;</code> Tag Attributes</h3><p>Many attributes are so-called <a href="https://www.w3.org/TR/2011/WD-html5-20110525/common-microsyntaxes.html#boolean-attributes">boolean attributes</a>. This means they are either on or off. In these cases, the attribute <em>should have no value</em> (or should have its name as its value) - its presence implies a true value and its absence implies a false value.</p>
+<p><em>These are incorrect:</em></p>
+<pre class="prettyprint source lang-html"><code>&lt;video controls=&quot;true&quot; ...>
+&lt;video loop=&quot;true&quot; ...>
+&lt;video controls=&quot;false&quot; ...></code></pre><blockquote>
+<p><strong>Note:</strong> The example with <code>controls=&quot;false&quot;</code> can be a point of confusion for new developers - it will actually turn controls <em>on</em>!</p>
+</blockquote>
+<p>These are correct:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video controls ...>
+&lt;video loop=&quot;loop&quot; ...>
+&lt;video ...></code></pre><h2>Player Readiness</h2><p>Because Video.js techs have the potential to be loaded asynchronously, it isn't always safe to interact with a player immediately upon setup. For this reason, Video.js players have a concept of &quot;readiness&quot; which will be familiar to anyone who has used jQuery before.</p>
+<p>Essentially, any number of ready callbacks can be defined for a Video.js player. There are three ways to pass these callbacks. In each example, we'll add an identical class to the player:</p>
+<p>Pass a callback to the <code>videojs()</code> function as a third argument:</p>
+<pre class="prettyprint source lang-js"><code>// Passing `null` for the options argument.
+videojs('my-player', null, function() {
+  this.addClass('my-example');
+});</code></pre><p>Pass a callback to a player's <code>ready()</code> method:</p>
+<pre class="prettyprint source lang-js"><code>var player = videojs('my-player');
 
+player.ready(function() {
+  this.addClass('my-example');
+});</code></pre><p>Listen for the player's <code>&quot;ready&quot;</code> event:</p>
+<pre class="prettyprint source lang-js"><code>var player = videojs('my-player');
 
-
+player.on('ready', function() {
+  this.addClass('my-example');
+});</code></pre><p>In each case, the callback is called asynchronously - <em>even if the player is already ready!</em></p>
+<h2>Advanced Player Workflows</h2><p>For a discussion of more advanced player workflows, see the <a href="player-workflows.md">player workflows guide</a>.</p>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +163,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

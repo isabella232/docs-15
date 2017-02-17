@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: event-target.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,172 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file src/js/event-target.js
+ */
+import * as Events from './utils/events.js';
+
+/**
+ * `EventTarget` is a class that can have the same API as the DOM `EventTarget`. It
+ * adds shorthand functions that wrap around lengthy functions. For example:
+ * the `on` function is a wrapper around `addEventListener`.
+ *
+ * @see [EventTarget Spec]{@link https://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget}
+ * @class EventTarget
+ */
+const EventTarget = function() {};
+
+/**
+ * A Custom DOM event.
+ *
+ * @typedef {Object} EventTarget~Event
+ * @see [Properties]{@link https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent}
+ */
+
+/**
+ * All event listeners should follow the following format.
+ *
+ * @callback EventTarget~EventListener
+ * @this {EventTarget}
+ *
+ * @param {EventTarget~Event} event
+ *        the event that triggered this function
+ *
+ * @param {Object} [hash]
+ *        hash of data sent during the event
+ */
+
+/**
+ * An object containing event names as keys and booleans as values.
+ *
+ * > NOTE: If an event name is set to a true value here {@link EventTarget#trigger}
+ *         will have extra functionality. See that function for more information.
+ *
+ * @property EventTarget.prototype.allowedEvents_
+ * @private
+ */
+EventTarget.prototype.allowedEvents_ = {};
+
+/**
+ * Adds an `event listener` to an instance of an `EventTarget`. An `event listener` is a
+ * function that will get called when an event with a certain name gets triggered.
+ *
+ * @param {string|string[]} type
+ *        An event name or an array of event names.
+ *
+ * @param {EventTarget~EventListener} fn
+ *        The function to call with `EventTarget`s
+ */
+EventTarget.prototype.on = function(type, fn) {
+  // Remove the addEventListener alias before calling Events.on
+  // so we don't get into an infinite type loop
+  const ael = this.addEventListener;
+
+  this.addEventListener = () => {};
+  Events.on(this, type, fn);
+  this.addEventListener = ael;
+};
+
+/**
+ * An alias of {@link EventTarget#on}. Allows `EventTarget` to mimic
+ * the standard DOM API.
+ *
+ * @function
+ * @see {@link EventTarget#on}
+ */
+EventTarget.prototype.addEventListener = EventTarget.prototype.on;
+
+/**
+ * Removes an `event listener` for a specific event from an instance of `EventTarget`.
+ * This makes it so that the `event listener` will no longer get called when the
+ * named event happens.
+ *
+ * @param {string|string[]} type
+ *        An event name or an array of event names.
+ *
+ * @param {EventTarget~EventListener} fn
+ *        The function to remove.
+ */
+EventTarget.prototype.off = function(type, fn) {
+  Events.off(this, type, fn);
+};
+
+/**
+ * An alias of {@link EventTarget#off}. Allows `EventTarget` to mimic
+ * the standard DOM API.
+ *
+ * @function
+ * @see {@link EventTarget#off}
+ */
+EventTarget.prototype.removeEventListener = EventTarget.prototype.off;
+
+/**
+ * This function will add an `event listener` that gets triggered only once. After the
+ * first trigger it will get removed. This is like adding an `event listener`
+ * with {@link EventTarget#on} that calls {@link EventTarget#off} on itself.
+ *
+ * @param {string|string[]} type
+ *        An event name or an array of event names.
+ *
+ * @param {EventTarget~EventListener} fn
+ *        The function to be called once for each event name.
+ */
+EventTarget.prototype.one = function(type, fn) {
+  // Remove the addEventListener alialing Events.on
+  // so we don't get into an infinite type loop
+  const ael = this.addEventListener;
+
+  this.addEventListener = () => {};
+  Events.one(this, type, fn);
+  this.addEventListener = ael;
+};
+
+/**
+ * This function causes an event to happen. This will then cause any `event listeners`
+ * that are waiting for that event, to get called. If there are no `event listeners`
+ * for an event then nothing will happen.
+ *
+ * If the name of the `Event` that is being triggered is in `EventTarget.allowedEvents_`.
+ * Trigger will also call the `on` + `uppercaseEventName` function.
+ *
+ * Example:
+ * 'click' is in `EventTarget.allowedEvents_`, so, trigger will attempt to call
+ * `onClick` if it exists.
+ *
+ * @param {string|EventTarget~Event|Object} event
+ *        The name of the event, an `Event`, or an object with a key of type set to
+ *        an event name.
+ */
+EventTarget.prototype.trigger = function(event) {
+  const type = event.type || event;
+
+  if (typeof event === 'string') {
+    event = {type};
+  }
+  event = Events.fixEvent(event);
+
+  if (this.allowedEvents_[type] &amp;&amp; this['on' + type]) {
+    this['on' + type](event);
+  }
+
+  Events.trigger(this, event);
+};
+
+/**
+ * An alias of {@link EventTarget#trigger}. Allows `EventTarget` to mimic
+ * the standard DOM API.
+ *
+ * @function
+ * @see {@link EventTarget#trigger}
+ */
+EventTarget.prototype.dispatchEvent = EventTarget.prototype.trigger;
+
+export default EventTarget;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +241,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

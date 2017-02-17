@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: text-tracks | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,193 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>text-tracks</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
+        <article class="readme">
+            <h1>Text Tracks</h1><p>Text tracks are a feature of HTML5 video for displaying time-triggered text to the viewer. Video.js offers a cross-browser implementation of text tracks.</p>
 <h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#a-note-on-remote-text-tracks">A Note on &quot;Remote&quot; Text Tracks</a></li>
+<li><a href="#creating-the-text-file">Creating the Text File</a></li>
+<li><a href="#adding-text-tracks-to-videojs">Adding Text Tracks to Video.js</a><ul>
+<li><a href="#track-attributes">track Attributes</a><ul>
+<li><a href="#kind">kind</a></li>
+<li><a href="#label">label</a></li>
+<li><a href="#default">default</a></li>
+<li><a href="#srclang">srclang</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
+<li><a href="#text-tracks-from-another-domain">Text Tracks from Another Domain</a></li>
 </ul>
 </li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#working-with-text-tracks">Working with Text Tracks</a><ul>
+<li><a href="#showing-tracks-programmatically">Showing Tracks Programmatically</a></li>
+<li><a href="#listen-for-a-cue-becoming-active">Listen for a Cue Becoming Active</a></li>
+</ul>
+</li>
+<li><a href="#emulated-text-tracks">Emulated Text Tracks</a><ul>
+<li><a href="#text-track-settings">Text Track Settings</a></li>
+</ul>
+</li>
+<li><a href="#text-track-precedence">Text Track Precedence</a></li>
+<li><a href="#api">API</a><ul>
+<li><a href="#remote-text-tracks">Remote Text Tracks</a></li>
+<li><a href="#text-tracks-1">Text Tracks</a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
+<h2>A Note on &quot;Remote&quot; Text Tracks</h2><p>Video.js refers to so-called &quot;remote&quot; text tracks. This is a convenient term for tracks that have an associated <code>&lt;track&gt;</code> element rather than those that do not.</p>
+<p>Either can be created programmatically, but <em>only remote text tracks can be removed from a player.</em> For that reason, we recommend <em>only</em> using remote text tracks.</p>
+<h2>Creating the Text File</h2><p>Timed text requires a text file in <a href="http://dev.w3.org/html5/webvtt/">WebVTT</a> format. This format defines a list of &quot;cues&quot; that have a start time, an end time, and text to display. <a href="https://dev.modern.ie/testdrive/demos/captionmaker/">Microsoft has a builder</a> that can help you get started on the file.</p>
+<blockquote>
+<p><strong>Note:</strong> When creating captions, there are additional <a href="http://www.theneitherworld.com/mcpoodle/SCC_TOOLS/DOCS/SCC_FORMAT.HTML#style">caption formatting techniques</a> to make captions more meaningful, like brackets around sound effects (e.g. <code>[ birds chirping ]</code>).</p>
+<p>For a more in depth style guide for captioning, see the <a href="http://www.dcmp.org/captioningkey/">Captioning Key</a>, but keep in mind not all features are supported by WebVTT or (more likely) the Video.js WebVTT implementation.</p>
+</blockquote>
+<h2>Adding Text Tracks to Video.js</h2><p>Once you have your WebVTT files created, you can add them to your <code>video</code> element using the <code>track</code> tag. Similar to <code>source</code> elements, <code>track</code> elements should be added as children of the <code>video</code> element:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video
+  class=&quot;video-js&quot;
+  controls
+  preload=&quot;auto&quot;
+  width=&quot;640&quot;
+  height=&quot;264&quot;
+  data-setup='{}'>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.mp4&quot; type=&quot;video/mp4&quot;>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.webm&quot; type=&quot;video/webm&quot;>
+  &lt;track kind=&quot;captions&quot; src=&quot;//example.com/path/to/captions.vtt&quot; srclang=&quot;en&quot; label=&quot;English&quot; default>
+&lt;/video></code></pre><p>Video.js will automatically read <code>track</code> elements from the <code>video</code> element. Tracks (remote and non-remote) can also be added programmatically.</p>
+<h3><code>track</code> Attributes</h3><h4><code>kind</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#text-track-kind">standard definition</a></p>
+</blockquote>
+<p>One of the track types supported by Video.js:</p>
+<ul>
+<li><code>&quot;subtitles&quot;</code> (default): Translations of the dialogue in the video for when audio is available but not understood. Subtitles are shown over the video.</li>
+<li><code>&quot;captions&quot;</code>: Transcription of the dialogue, sound effects, musical cues, and other audio information for viewer who are deaf/hard of hearing, or the video is muted. Captions are also shown over the video.</li>
+<li><code>&quot;chapters&quot;</code>: Chapter titles that are used to create navigation within the video. Typically, these are in the form of a list of chapters that the viewer can use to navigate the video.</li>
+<li><code>&quot;descriptions&quot;</code>: Text descriptions of the action in the content for when the video portion isn't available or because the viewer is blind or not using a screen. Descriptions are read by a screen reader or turned into a separate audio track.</li>
+<li><code>&quot;metadata&quot;</code>: Tracks that have data meant for JavaScript to parse and do something with. These aren't shown to the user.</li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<h4><code>label</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#text-track-label">standard definition</a></p>
+</blockquote>
+<p>Short descriptive text for the track that will used in the user interface. For example, in a menu for selecting a captions language.</p>
+<h4><code>default</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-track-default">standard definition</a></p>
+</blockquote>
+<p>The boolean <code>default</code> attribute can be used to indicate that a track's mode should start as <code>&quot;showing&quot;</code>. Otherwise, the viewer would need to select their language from a captions or subtitles menu.</p>
+<blockquote>
+<p><strong>Note:</strong> For chapters, <code>default</code> is required if you want the chapters menu to show.</p>
+</blockquote>
+<h4><code>srclang</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-track-srclang">standard definition</a></p>
+</blockquote>
+<p>The valid <a href="https://tools.ietf.org/html/bcp47">BCP 47</a> code for the language of the text track, e.g. <code>&quot;en&quot;</code> for English or <code>&quot;es&quot;</code> for Spanish.</p>
+<p>For supported language translations, please see the <a href="https://github.com/videojs/video.js/tree/master/lang">languages folder (/lang)</a> folder located in the Video.js root and refer to the <a href="./languages.md">languages guide</a> for more information on languages in Video.js.</p>
+<h3>Text Tracks from Another Domain</h3><p>Because Video.js loads the text track file via JavaScript, the <a href="http://en.wikipedia.org/wiki/Same_origin_policy">same-origin policy</a> applies. If you'd like to have a player served from one domain, but the text track served from another, you'll need to <a href="http://enable-cors.org/">enable CORS</a> on the server that is serving your text tracks.</p>
+<p>In addition to enabling CORS, you will need to add the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes"><code>crossorigin</code> attribute</a> to the video element itself. This attribute has two possible values <code>&quot;anonymous&quot;</code> and <code>&quot;use-credentials&quot;</code>. Most users will want to use <code>&quot;anonymous&quot;</code> with cross-origin tracks:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video class=&quot;video-js&quot; crossorigin=&quot;anonymous&quot;>
+  &lt;source src=&quot;//vjs.zencdn.net/v/oceans.mp4&quot; type=&quot;video/mp4&quot;>
+  &lt;track src=&quot;//example.com/oceans.vtt&quot; kind=&quot;captions&quot; srclang=&quot;en&quot; label=&quot;English&quot;>
+&lt;/video></code></pre><p>One thing to be aware of is that the video files themselves will <em>also</em> need CORS headers. This is because some browsers apply the <code>crossorigin</code> attribute to the video source itself and not just the tracks. This is considered a <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#security-and-privacy-considerations">security concern by the spec</a>.</p>
+<h2>Working with Text Tracks</h2><h3>Showing Tracks Programmatically</h3><p>Certain use cases call for turning captions on and off programmatically rather than forcing the user to do so themselves. This can be easily achieved by modifying the <code>mode</code> property of the text tracks.</p>
+<p>The <code>mode</code> can be one of three values <code>&quot;disabled&quot;</code>, <code>&quot;hidden&quot;</code>, and <code>&quot;showing&quot;</code>. When a text track's <code>mode</code> is <code>&quot;disabled&quot;</code>, the track does not show on screen as the video is playing.</p>
+<p>When the <code>mode</code> is set to <code>&quot;showing&quot;</code>, the track is visible to the viewer and updates while the video is playing.</p>
+<pre class="prettyprint source lang-js"><code>// Get all text tracks for the current player.
+var tracks = player.textTracks();
 
+for (var i = 0; i &lt; tracks.length; i++) {
+  var track = tracks[i];
 
+  // Find the English captions track and mark it as &quot;showing&quot;.
+  if (track.kind === 'captions' && track.language === 'en') {
+    track.mode = 'showing';
+  }
+}</code></pre><h3>Listen for a Cue Becoming Active</h3><p>One of the supported values for <code>mode</code> is <code>&quot;hidden&quot;</code>. This <code>mode</code> means that the track will update as the video is playing, but it won't be visible to the viewer. This is most useful for tracks where <code>kind=&quot;metadata&quot;</code>.</p>
+<p>A common use case for metadata text tracks is to use them to trigger behaviors when their cues become active. For this purpose, tracks emit a <code>&quot;cuechange&quot;</code> event.</p>
+<pre class="prettyprint source lang-js"><code>// Get all text tracks for the current player.
+var tracks = player.textTracks();
+var metadataTrack;
 
+for (var i = 0; i &lt; tracks.length; i++) {
+  var track = tracks[i];
+
+  // Find the metadata track that's labeled &quot;ads&quot;.
+  if (track.kind === 'metadata' && track.label === 'ads') {
+    track.mode = 'hidden';
+
+    // Store it for usage outside of the loop.
+    metadataTrack = track;
+  }
+}
+
+// Add a listener for the &quot;cuechange&quot; event and start ad playback.
+metadataTrack.addEventListener('cuechange', function() {
+  player.ads.startLinearAdMode();
+});</code></pre><h2>Emulated Text Tracks</h2><p>By default, Video.js will use native text tracks and fall back to emulated text tracks if the native functionality is broken, incomplete, or non-existent. The Flash tech will always use the emulated text track functionality.</p>
+<p>The Video.js API and TextTrack objects were modeled after the W3C specification. Video.js uses <a href="https://github.com/mozilla/vtt.js">Mozilla's vtt.js</a> library to parse and display emulated text tracks.</p>
+<p>To disable native text track functionality and force Video.js to use emulated text tracks always, the <code>nativeTextTracks</code> option can be passed to a tech:</p>
+<pre class="prettyprint source lang-js"><code>// Create a player, passing `nativeTextTracks: false` to the HTML5 tech.
+var player = videojs('myvideo', {
+  html5: {
+    nativeTextTracks: false
+  }
+});</code></pre><h3>Text Track Settings</h3><p>When using emulated text tracks, captions will have an additional item in the menu called &quot;Caption Settings&quot;. This allows the user to alter how captions are styled on screen.</p>
+<p>This feature can be disabled by turning off the <code>TextTrackSettings</code> component and hiding the menu item.</p>
+<pre class="prettyprint source lang-js"><code>var player = videojs('myvideo', {
+  // Make the text track settings dialog not initialize.
+  textTrackSettings: false
+});</code></pre><pre class="prettyprint source lang-css"><code>/* Hide the captions settings item from the captions menu. */
+.vjs-texttrack-settings {
+  display: none;
+}</code></pre><h2>Text Track Precedence</h2><p>In general, <code>&quot;descriptions&quot;</code> tracks are of lower precedence than <code>&quot;captions&quot;</code> and <code>&quot;subtitles&quot;</code>. What this mean for developers using Video.js?</p>
+<ul>
+<li>If you are using the <code>default</code> attribute, Video.js will choose the first track that is marked as <code>default</code> and turn it on. If there are multiple tracks marked <code>default</code>, it will turn on the first <code>&quot;captions&quot;</code> or <code>&quot;subtitles&quot;</code> track <em>before</em> any <code>&quot;descriptions&quot;</code> tracks.<ul>
+<li>This only applied to the emulated text track support, native text tracks behavior will change depending on the browser.</li>
+</ul>
+</li>
+<li>If a track is selected from the menu, Video.js will turn off all the other tracks of the same kind. While this suggests Video.js supports both <code>&quot;subtitles&quot;</code> and <code>&quot;captions&quot;</code> being turned on simultaneously, this is currently not the case; Video.js only supports one track being displayed at a time.<ul>
+<li>This means that for emulated text tracks, Video.js will display the first enabled <code>&quot;subtitles&quot;</code> or <code>&quot;captions&quot;</code> track.</li>
+<li>When native text tracks are supported, other tracks of the same kind will still be disabled, but it is possible that multiple text tracks are shown.</li>
+<li>If a <code>&quot;descriptions&quot;</code> track is selected and subsequently a <code>&quot;subtitles&quot;</code> or <code>&quot;captions&quot;</code> track is selected, the <code>&quot;descriptions&quot;</code> track is disabled and its menu button is also disabled.</li>
+</ul>
+</li>
+<li>When enabling a track programmatically, Video.js performs minimal enforcement.<ul>
+<li>For emulated text tracks, Video.js chooses the first track that's <code>&quot;showing&quot;</code> - again choosing <code>&quot;subtitles&quot;</code> or <code>&quot;captions&quot;</code> over <code>&quot;descriptions&quot;</code>.</li>
+<li>For native text tracks, this behavior depends on the browser. Some browsers will allow multiple text tracks, but others will disable all other tracks when a new one is selected.</li>
+</ul>
+</li>
+</ul>
+<h2>API</h2><p>For more complete information, refer to the <a href="http://docs.videojs.com/docs/api/index.html">Video.js API docs</a>.</p>
+<h3>Remote Text Tracks</h3><p>As mentioned <a href="#a-note-on-remote-text-tracks">above</a>, remote text tracks represent the recommended API offered by Video.js as they can be removed.</p>
+<ul>
+<li><code>Player#remoteTextTracks()</code></li>
+<li><code>Player#remoteTextTrackEls()</code></li>
+<li><p><code>Player#addRemoteTextTrack(Object options)</code></p>
+<p>Available options are the same as the <a href="#track-attributes">available <code>track</code> attributes</a>. And <code>language</code> is a supported option as an alias for the <code>srclang</code> attribute - either works here.</p>
+</li>
+<li><p><code>Player#removeRemoteTextTrack(HTMLTrackElement|TextTrack)</code></p>
+</li>
+</ul>
+<h3>Text Tracks</h3><p>It is generally recommended that you use <em>remote</em> text tracks rather than these purely programmatic text tracks for the majority of use-cases.</p>
+<ul>
+<li><code>Player#textTracks()</code></li>
+<li><p><code>Player#addTextTrack(String kind, [String label [, String language]])</code></p>
+<blockquote>
+<p><strong>Note:</strong> Non-remote text tracks are intended for <em>purely programmatic usage</em> of tracks and have the important limitation that they <em>cannot be removed once created</em>.</p>
+<p>The standard <code>addTextTrack</code> does <strong>not</strong> have a corresponding <code>removeTextTrack</code> method; so, we actually discourage the use of this method!</p>
+</blockquote>
+</li>
+<li><p><code>TextTrackList()</code></p>
+</li>
+<li><code>TextTrack()</code></li>
+</ul>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +256,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

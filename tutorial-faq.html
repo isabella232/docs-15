@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: faq | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,170 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>faq</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+        <article class="readme">
+            <h1>FAQ</h1><h2>Table of Contents</h2><ul>
+<li><a href="#q-what-is-videojs">Q: What is video.js?</a></li>
+<li><a href="#q-how-do-i-install-videojs">Q: How do I install video.js?</a></li>
+<li><a href="#q-is-videojs-on-bower">Q: Is video.js on bower?</a></li>
+<li><a href="#q-what-do-videojs-version-numbers-mean">Q: What do video.js version numbers mean?</a></li>
+<li><a href="#q-how-can-i-troubleshoot-playback-issues">Q: How can I troubleshoot playback issues?</a></li>
+<li><a href="#q-a-video-does-not-play-in-a-specific-browser-why">Q: A video does not play in a specific browser. Why?</a></li>
+<li><a href="#q-why-does-the-entire-video-download-before-playback-why-does-the-video-load-for-a-long-time">Q: Why does the entire video download before playback? Why does the video load for a long time?</a></li>
+<li><a href="#q-i-see-an-error-thrown-that-mentions-vdata12345-what-is-that">Q: I see an error thrown that mentions vdata12345. What is that?</a></li>
+<li><a href="#q-i-think-i-found-a-bug-with-videojs-or-i-want-to-add-a-feature-what-should-i-do">Q: I think I found a bug with video.js or I want to add a feature. What should I do?</a><ul>
+<li><a href="#if-you-think-that-you-can-fix-the-issue-or-add-the-feature">if you think that you can fix the issue or add the feature</a></li>
+<li><a href="#if-you-dont-think-you-can-fix-the-issue-or-add-the-feature">If you don't think you can fix the issue or add the feature</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
+<li><a href="#q-what-is-a-reduced-test-case">Q: What is a reduced test case?</a></li>
+<li><a href="#q-what-media-formats-does-videojs-support">Q: What media formats does video.js support?</a></li>
+<li><a href="#q-how-to-i-autoplay-the-video">Q: How to I autoplay the video?</a><ul>
+<li><a href="#q-how-can-i-autoplay-a-video-on-a-mobile-device">Q: How can I autoplay a video on a mobile device?</a></li>
 </ul>
 </li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#q-how-can-i-play-rtmp-video-in-videojs">Q: How can I play RTMP video in video.js?</a></li>
+<li><a href="#q-how-can-i-hide-the-links-to-my-videosubtitlesaudiotracks">Q: How can I hide the links to my video/subtitles/audio/tracks?</a></li>
+<li><a href="#q-can-i-turn-off-videojs-logging">Q: Can I turn off video.js logging?</a></li>
+<li><a href="#q-what-is-a-plugin">Q: What is a plugin?</a></li>
+<li><a href="#q-how-do-i-make-a-plugin-for-videojs">Q: How do I make a plugin for video.js?</a></li>
+<li><a href="#q-where-can-i-find-a-list-of-videojs-plugins">Q: Where can I find a list of video.js plugins?</a></li>
+<li><a href="#q-how-can-i-get-my-plugin-listed-on-the-website">Q: How can I get my plugin listed on the website?</a></li>
+<li><a href="#q-where-can-i-find-a-list-of-videojs-skins">Q: Where can I find a list of video.js skins?</a></li>
+<li><a href="#q-does-videojs-work-as-an-audio-only-player">Q: Does video.js work as an audio only player?</a></li>
+<li><a href="#q-does-videojs-support-audio-tracks">Q: Does video.js support audio tracks?</a></li>
+<li><a href="#q-does-videojs-support-video-tracks">Q: Does video.js support video tracks?</a></li>
+<li><a href="#q-does-videojs-support-text-tracks-captions-subtitles-etc">Q: Does video.js support text tracks (captions, subtitles, etc)?</a></li>
+<li><a href="#q-does-videojs-support-hls-http-live-streaming-video">Q: Does video.js support HLS (HTTP Live streaming) video?</a></li>
+<li><a href="#q-does-videojs-support-mpeg-dash-video">Q: Does video.js support MPEG Dash video?</a></li>
+<li><a href="#q-does-videojs-support-live-video">Q: Does video.js support live video?</a></li>
+<li><a href="#q-can-videojs-wrap-around-youtube-videos">Q: Can video.js wrap around YouTube videos?</a></li>
+<li><a href="#q-can-videojs-wrap-around-vimeo-videos">Q: Can video.js wrap around Vimeo videos?</a></li>
+<li><a href="#q-does-videojs-support-drm-video">Q: Does video.js support DRM video?</a></li>
+<li><a href="#q-does-videojs-have-any-support-for-advertisement-integrations">Q: Does video.js have any support for advertisement integrations?</a></li>
+<li><a href="#q-can-videojs-be-required-in-nodejs">Q: Can video.js be required in node.js?</a></li>
+<li><a href="#q-does-videojs-work-with-webpack">Q: Does video.js work with webpack?</a></li>
+<li><a href="#q-does-videojs-work-with-react">Q: Does video.js work with react?</a></li>
+</ul>
+<h2>Q: What is video.js?</h2><p>video.js is an extendable framework/library around the native video element. It does the following:</p>
+<ul>
+<li>Offers a plugin API so that different types of video can be handed to the native
+video element (e.g. HLS, Flash, HTML5 video, etc).</li>
+<li>Unifies the native video api across browsers (polyfilling support for features
+if necessary)</li>
+<li>Offers an extendable and themable UI</li>
+<li>Takes care of accessibility for the user (in-progress)</li>
+<li>Has a set of core plugins that offer support for tons of additional video formats.<ul>
+<li><a href="http://github.com/videojs/videojs-contrib-hls">videojs-contrib-hls</a></li>
+<li><a href="http://github.com/videojs/videojs-contrib-dash">videojs-contrib-dash</a></li>
 </ul>
 </li>
+<li>Support for DRM video via a core plugin<ul>
+<li><a href="https://github.com/videojs/videojs-contrib-eme">videojs-contrib-eme</a></li>
 </ul>
 </li>
-<li><a href="#api-docs">API Docs</a></li>
+<li>Lots of plugins which offer support for all kinds of features. See the <a href="http://videojs.com/plugins">plugin list on videojs.com</a></li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<h2>Q: How do I install video.js?</h2><p>Currently video.js can be installed using bower, npm, serving a release file from
+a github tag, or even using a CDN hosted version. For information on doing any of those
+see the <a href="http://videojs.com/getting-started/">install guide</a>.</p>
+<h2>Q: Is video.js on bower?</h2><p>Yes! See the <a href="http://videojs.com/getting-started/">install guide</a> for more information.</p>
+<h2>Q: What do video.js version numbers mean?</h2><p>video.js follows <a href="http://semver.org/">semver</a> which means that the API should not change
+out from under a user unless there is a major version increase.</p>
+<h2>Q: How can I troubleshoot playback issues?</h2><p>See the <a href="troubleshooting.md">troubleshooting guide</a>. If troubleshooting does not
+solve your issue, please submit a <a href="#q-i-think-i-found-a-bug-with-videojs-or-i-want-to-add-a-feature-what-should-i-do">pull request or an issue</a>.</p>
+<h2>Q: A video does not play in a specific browser. Why?</h2><p>See the <a href="troubleshooting.md">troubleshooting guide</a>. If troubleshooting does not
+solve your issue, please submit a <a href="#q-i-think-i-found-a-bug-with-videojs-or-i-want-to-add-a-feature-what-should-i-do">pull request or an issue</a>.</p>
+<h2>Q: Why does the entire video download before playback? Why does the video load for a long time?</h2><p>See the <a href="troubleshooting.md">troubleshooting guide</a>. If troubleshooting does not
+solve your issue, please submit a <a href="#q-i-think-i-found-a-bug-with-videojs-or-i-want-to-add-a-feature-what-should-i-do">pull request or an issue</a>.</p>
+<h2>Q: I see an error thrown that mentions <code>vdata12345</code>. What is that?</h2><p>See the <a href="troubleshooting.md">troubleshooting guide</a>. If troubleshooting does not
+solve your issue, please submit a <a href="#q-i-think-i-found-a-bug-with-videojs-or-i-want-to-add-a-feature-what-should-i-do">pull request or an issue</a>.</p>
+<h2>Q: I think I found a bug with video.js or I want to add a feature. What should I do?</h2><h3>if you think that you can fix the issue or add the feature</h3><p>Submit a pull request to the <a href="https://github.com/videojs/video.js/pulls">video.js repo</a>.
+Make sure to follow the <a href="http://github.com/videojs/video.js/blob/master/CONTRIBUTING.md#contributing-code">contributing guide</a> and
+the <a href="http://github.com/videojs/video.js/blob/master/.github/PULL_REQUEST_TEMPLATE.md">pull request template</a>.</p>
+<h3>If you don't think you can fix the issue or add the feature</h3><p>Open an <a href="https://github.com/videojs/video.js/issues">issue on the video.js repo</a>. Make
+sure that you follow the <a href="http://github.com/videojs/video.js/blob/master/.github/ISSUE_TEMPLATE.md">issue template</a> and the
+<a href="http://github.com/videojs/video.js/blob/master/CONTRIBUTING.md#filing-issues">contributing guide</a> so that we can better assist you
+with your issue.</p>
+<h2>Q: What is a reduced test case?</h2><p>A reduced test case is an example of the problem that you are facing in isolation.
+Think of it as example page that reproduces the issue in the least amount of possible code.
+We have a <a href="http://jsbin.com/axedog/edit?html,output">starter example</a> for reduced test cases. To learn more
+about reduced test cases visit <a href="https://css-tricks.com/reduced-test-cases/">css-tricks</a></p>
+<h2>Q: What media formats does video.js support?</h2><p>This depends on the formats supported by the browser's HTML5 video element, and the playback
+techs made available to video.js. For example, video.js 5 includes the Flash tech by default which
+enables the playback of FLV video where the Flash plugin is available. For more information
+on media formats see the <a href="troubleshooting.md">troubleshooting guide</a>.</p>
+<h2>Q: How to I autoplay the video?</h2><p>Video.js supports the standard html5 <code>autoplay</code> attribute on the video element.
+It also supports it as an option to video.js or as a method invocation on the player.</p>
+<pre class="prettyprint source lang-html"><code>&lt;video autoplay controls class=&quot;video-js&quot;></code></pre><pre class="prettyprint source lang-js"><code>var player = videojs('my-video', {
+  autoplay: true
+});
 
+// or
 
-
+player.autoplay(true);</code></pre><h3>Q: How can I autoplay a video on a mobile device?</h3><p>Most mobile devices have blocked autoplaying videos until recently.
+For mobile devices that don't support autoplaying, autoplay isn't supported by video.js.
+For those devices that support autoplaying, like iOS10 and Chrome for Android 53+,
+you must mute the video or have a video without audio tracks to be able to play it.
+For example:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video muted autoplay playsinline></code></pre><p>Will make an inline, muted, autoplaying video on an iPhone with iOS10.</p>
+<h2>Q: How can I play RTMP video in video.js?</h2><p>Make sure that the Flash tech is available -- RTMP is not playable on browsers without Flash including mobile. Then, just set the rtmp source with
+an appropriate type -- <code>rtmp/mp4</code> or <code>rtmp/flv</code>.
+The main thing to be aware of is that video.js splits the connection url and stream name with the <code>&amp;</code> character.
+So, you'd want to update the url to follow that format. For example: <code>rtmp://example.com/live&amp;foo</code> or <code>rtmp://example.com/fms&amp;mp4:path/to/file.mp4</code>.</p>
+<p>If the server requires query parameters for authentication, these should be added to the connection part url, for example <code>rtmp://example.com/live?token=1234&amp;foo</code>.</p>
+<h2>Q: How can I hide the links to my video/subtitles/audio/tracks?</h2><p>It's impossible to hide the network requests a browser makes and difficult to
+sufficiently obfuscate URLs in the source. Techniques such as token authentication may
+help but are outside of the scope of video.js.</p>
+<p>For content that must be highly secure <a href="https://github.com/videojs/videojs-contrib-eme">videojs-contrib-eme</a> adds DRM support.</p>
+<h2>Q: Can I turn off video.js logging?</h2><p>Yes! This can be achieved by adding the following code <em>after</em> including Video.js, but <em>before</em> creating any player(s):</p>
+<pre class="prettyprint source lang-js"><code>videojs.log.level('off');</code></pre><p>For more information, including which logging levels are available, check out the <a href="./guides/debug.md">debugging guide</a>.</p>
+<h2>Q: What is a plugin?</h2><p>A plugin is a group of reusable functionality that can be re-used by others. For instance a plugin could add
+a button to video.js that makes the video replay 10 times in a row before it stops playback for good. If such
+a plugin existed and was published users could include it on their page to share that functionality.</p>
+<h2>Q: How do I make a plugin for video.js?</h2><p>See the <a href="plugins.md">plugin guide</a> for information on making a plugin for video.js.</p>
+<!-- TODO: Once these is a button guide, add this back in
+## Q: How do I add a button to video.js?
+See the [button guide][button-guide] for information on adding a button to video.js.
+-->
+<h2>Q: Where can I find a list of video.js plugins?</h2><p>The official <a href="http://videojs.com/plugins">list of plugins on videojs.com</a>.</p>
+<h2>Q: How can I get my plugin listed on the website?</h2><p>Add the 'videojs-plugin' <a href="https://docs.npmjs.com/files/package.json#keywords">keyword to your array in package.json</a>
+and publish your package to npm. If you use the <a href="https://github.com/videojs/generator-videojs-plugin">plugin generator</a> this will be done automatically for you. See
+the <a href="plugins.md">plugins guide</a> for more information.</p>
+<h2>Q: Where can I find a list of video.js skins?</h2><p>See the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js github wiki</a>.</p>
+<h2>Q: Does video.js work as an audio only player?</h2><p>Yes! It can be used to play audio only files in a <code>&lt;video&gt;</code> or <code>&lt;audio&gt;</code> tag. The
+difference being that the <code>&lt;audio&gt;</code> tag will not have a blank display area and the <code>&lt;video&gt;</code>
+tag will. Note that audio only will not work with the Flash playback tech.</p>
+<h2>Q: Does video.js support audio tracks?</h2><p>Yes! See the <a href="audio-tracks.md">audio tracks guide</a> for information on using audio tracks.</p>
+<h2>Q: Does video.js support video tracks?</h2><p>The code for video tracks exists but it has not been tested. See the <a href="video-tracks.md">video tracks guide</a>
+for more information on using video tracks.</p>
+<h2>Q: Does video.js support text tracks (captions, subtitles, etc)?</h2><p>Yes! See the <a href="text-tracks.md">text tracks guide</a> for information on using text tracks.</p>
+<h2>Q: Does video.js support HLS (HTTP Live streaming) video?</h2><p>video.js supports HLS video if the native HTML5 element supports HLS (e.g. Safari, Edge,
+Chrome for Android, and iOS). For browsers without native support see the <a href="http://github.com/videojs/videojs-contrib-hls">videojs-contrib-hls</a>
+project which adds support.</p>
+<h2>Q: Does video.js support MPEG Dash video?</h2><p>video.js itself does not support MPEG DASH, however an official project called <a href="http://github.com/videojs/videojs-contrib-dash">videojs-contrib-dash</a>
+adds support for MPEG DASH video.</p>
+<h2>Q: Does video.js support live video?</h2><p>Yes! Video.js adds support for live videos via the Flash tech which supports RTMP streams.
+The official HLS tech, <a href="http://github.com/videojs/videojs-contrib-hls">videojs-contrib-hls</a>, will add support for live HLS video
+if you add it to your page with video.js.</p>
+<h2>Q: Can video.js wrap around YouTube videos?</h2><p>No. There is an official plugin that adds support. It is called <a href="https://github.com/videojs/videojs-youtube">videojs-youtube</a>.</p>
+<h2>Q: Can video.js wrap around Vimeo videos?</h2><p>No. There is an official plugin that adds support. It is called <a href="https://github.com/videojs/videojs-vimeo">videojs-vimeo</a>.</p>
+<h2>Q: Does video.js support DRM video?</h2><p>No. There is an official plugin that adds support. It is called <a href="https://github.com/videojs/videojs-contrib-eme">videojs-contrib-eme</a>.</p>
+<h2>Q: Does video.js have any support for advertisement integrations?</h2><p>No. There is an official plugin that adds support. It is called <a href="https://github.com/videojs/videojs-contrib-ads">videojs-contrib-ads</a>.</p>
+<h2>Q: Can video.js be required in node.js?</h2><p>Yes! Please <a href="#q-i-think-i-found-a-bug-with-videojs-or-i-want-to-add-a-feature-what-should-i-do">submit an issue or open a pull request</a> if this does not work.</p>
+<h2>Q: Does video.js work with webpack?</h2><p>Yes! Please <a href="#q-i-think-i-found-a-bug-with-videojs-or-i-want-to-add-a-feature-what-should-i-do">submit an issue or open a pull request</a> if this does not work.</p>
+<p>Be sure to use <code>require('!style-loader!css-loader!video.js/dist/video-js.css')</code> to inject video.js CSS.</p>
+<h2>Q: Does video.js work with react?</h2><p>Yes! See <a href="./guides/react.md">ReactJS integration example</a>.</p>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +233,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: components | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,238 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>components</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
+        <article class="readme">
+            <h1>Components</h1><p>The architecture of the Video.js player is centered around components. The <code>Player</code> class and all classes representing player controls and other UI elements inherit from the <code>Component</code> class. This architecture makes it easy to construct the user interface of the Video.js player in a tree-like structure that mirrors the DOM.</p>
 <h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#what-is-a-component">What is a Component?</a></li>
+<li><a href="#creating-a-component">Creating a Component</a></li>
+<li><a href="#component-children">Component Children</a><ul>
+<li><a href="#basic-example">Basic Example</a></li>
+<li><a href="#using-options">Using Options</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
+<li><a href="#event-listening">Event Listening</a><ul>
+<li><a href="#using-on">Using on</a></li>
+<li><a href="#using-off">Using off</a></li>
+<li><a href="#using-one">Using one</a></li>
+<li><a href="#using-trigger">Using trigger</a></li>
 </ul>
 </li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#default-component-tree">Default Component Tree</a></li>
+<li><a href="#specific-component-details">Specific Component Details</a><ul>
+<li><a href="#volume-panel">Volume Panel</a></li>
+<li><a href="#text-track-settings">Text Track Settings</a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
+<h2>What is a Component?</h2><p>A component is a JavaScript object that has the following features:</p>
+<ul>
+<li>An associated DOM element.</li>
+<li>An association to a <code>Player</code> object.</li>
+<li>The ability to manage any number of child components.</li>
+<li>The ability to listen for and trigger events.</li>
+<li>A lifecycle of initialization and disposal.</li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<p>For more specifics on the programmatic interface of a component, see <a href="http://docs.videojs.com/docs/api/component.html">the component API docs</a>.</p>
+<h2>Creating a Component</h2><p>Video.js components can be inherited and registered with Video.js to add new features and UI to the player.</p>
+<p>For a working example, <a href="http://jsbin.com/vobacas/edit?html,css,js,output">we have a JSBin</a> demonstrating the creation of a component for displaying a title across the top of the player.</p>
+<p>In addition, there are a couple methods worth recognizing:</p>
+<ul>
+<li><code>videojs.getComponent(String name)</code>: Retrieves component constructors from Video.js.</li>
+<li><code>videojs.registerComponent(String name, Function Comp)</code>: Registers component constructors with Video.js.</li>
+<li><code>videojs.extend(Function component, Object properties)</code>: Provides prototype inheritance. Can be used to extend a component's constructor, returning a new constructor with the given properties.</li>
+</ul>
+<p>Creation:</p>
+<pre class="prettyprint source lang-js"><code>// adding a button to the player
+var player = videojs('some-video-id');
+var Component = videojs.getComponent('Component');
+var button = new Component(player);
 
+console.log(button.el());</code></pre><p>The above code will output</p>
+<pre class="prettyprint source lang-html"><code>&lt;div class=&quot;video-js&quot;>
+  &lt;div class=&quot;vjs-button&quot;>Button&lt;/div>
+&lt;/div></code></pre><p>Adding the new button to the player</p>
+<pre class="prettyprint source lang-js"><code>// adding a button to the player
+var player = videojs('some-video-id');
+var button = player.addChild('button');
 
+console.log(button.el());
+// will have the same html result as the previous example</code></pre><h2>Component Children</h2><p>Again, refer to <a href="http://docs.videojs.com/docs/api/component.html">the component API docs</a> for complete details on methods available for managing component structures.</p>
+<h3>Basic Example</h3><p>When child component is added to a parent component, Video.js inserts the element of the child into the element of the parent. For example, adding a component like this:</p>
+<pre class="prettyprint source lang-js"><code>// Add a &quot;BigPlayButton&quot; component to the player. Its element will be appended to the player's element.
+player.addChild('BigPlayButton');</code></pre><p>Results in a DOM that looks like this:</p>
+<pre class="prettyprint source lang-html"><code>&lt;!-- Player Element -->
+&lt;div class=&quot;video-js&quot;>
+  &lt;!-- BigPlayButton Element -->
+  &lt;div class=&quot;vjs-big-play-button&quot;>&lt;/div>
+&lt;/div></code></pre><p>Conversely, removing child components will remove the child component's element from the DOM:</p>
+<pre class="prettyprint source lang-js"><code>player.removeChild('BigPlayButton');</code></pre><p>Results in a DOM that looks like this:</p>
+<pre class="prettyprint source lang-html"><code>&lt;!-- Player Element -->
+&lt;div class=&quot;video-js&quot;>
+&lt;/div></code></pre><h3>Using Options</h3><p>Pass in options for child constructors and options for children of the child.</p>
+<pre class="prettyprint source lang-js"><code>var player = videojs('some-vid-id');
+var Component = videojs.getComponent('Component');
+var myComponent = new Component(player);
+var myButton = myComponent.addChild('MyButton', {
+  text: 'Press Me',
+  buttonChildExample: {
+    buttonChildOption: true
+  }
+});</code></pre><p>Children can also be added via options when a component is initialized.</p>
+<blockquote>
+<p>Note: Include a 'name' key which will be used if two child components of the same
+      type that need different options.</p>
+</blockquote>
+<pre class="prettyprint source lang-js"><code>// MyComponent is from the above example
+var myComp = new MyComponent(player, {
+  children: ['button', {
+    name: 'button',
+    someOtherOption: true
+  }, {
+    name: 'button',
+    someOtherOption: false
+  }]
+});</code></pre><h2>Event Listening</h2><h3>Using <code>on</code></h3><pre class="prettyprint source lang-js"><code>var player = videojs('some-player-id');
+var Component = videojs.getComponent('Component');
+var myComponent = new Component(player);
+var myFunc = function() {
+  var myComponent = this;
+  console.log('myFunc called');
+};
 
+myComponent.on('eventType', myFunc);
+myComponent.trigger('eventType');
+// logs 'myFunc called'</code></pre><p>The context of <code>myFunc</code> will be <code>myComponent</code> unless it is bound. You can add
+a listener to another element or component.</p>
+<pre class="prettyprint source lang-js"><code>var otherComponent = new Component(player);
+
+// myComponent/myFunc is from the above example
+myComponent.on(otherComponent.el(), 'eventName', myFunc);
+myComponent.on(otherComponent, 'eventName', myFunc);
+
+otherComponent.trigger('eventName');
+// logs 'myFunc called' twice</code></pre><h3>Using <code>off</code></h3><pre class="prettyprint source lang-js"><code>var player = videojs('some-player-id');
+var Component = videojs.getComponent('Component');
+var myComponent = new Component(player);
+var myFunc = function() {
+  var myComponent = this;
+  console.log('myFunc called');
+};
+myComponent.on('eventType', myFunc);
+myComponent.trigger('eventType');
+// logs 'myFunc called'
+
+myComponent.off('eventType', myFunc);
+myComponent.trigger('eventType');
+// does nothing</code></pre><p>If myFunc gets excluded, <em>all</em> listeners for the event type will get removed. If
+eventType gets excluded, <em>all</em> listeners will get removed from the component.
+You can use <code>off</code> to remove listeners that get added to other elements or
+components using:</p>
+<p> <code>myComponent.on(otherComponent...</code></p>
+<p>In this case both the event type and listener function are <strong>REQUIRED</strong>.</p>
+<pre class="prettyprint source lang-js"><code>var otherComponent = new Component(player);
+
+// myComponent/myFunc is from the above example
+myComponent.on(otherComponent.el(), 'eventName', myFunc);
+myComponent.on(otherComponent, 'eventName', myFunc);
+
+otherComponent.trigger('eventName');
+// logs 'myFunc called' twice
+myComponent.off(ootherComponent.el(), 'eventName', myFunc);
+myComponent.off(otherComponent, 'eventName', myFunc);
+otherComponent.trigger('eventName');
+// does nothing</code></pre><h3>Using <code>one</code></h3><pre class="prettyprint source lang-js"><code>var player = videojs('some-player-id');
+var Component = videojs.getComponent('Component');
+var myComponent = new Component(player);
+var myFunc = function() {
+  var myComponent = this;
+  console.log('myFunc called');
+};
+myComponent.one('eventName', myFunc);
+myComponent.trigger('eventName');
+// logs 'myFunc called'
+
+myComponent.trigger('eventName');
+// does nothing</code></pre><p>You can also add a listener to another element or component that will get
+triggered only once.</p>
+<pre class="prettyprint source lang-js"><code>var otherComponent = new Component(player);
+
+// myComponent/myFunc is from the above example
+myComponent.one(otherComponent.el(), 'eventName', myFunc);
+myComponent.one(otherComponent, 'eventName', myFunc);
+
+otherComponent.trigger('eventName');
+// logs 'myFunc called' twice
+
+otherComponent.trigger('eventName');
+// does nothing</code></pre><h3>Using <code>trigger</code></h3><pre class="prettyprint source lang-js"><code>var player = videojs('some-player-id');
+var Component = videojs.getComponent('Component');
+var myComponent = new Component(player);
+var myFunc = function(data) {
+  var myComponent = this;
+  console.log('myFunc called');
+  console.log(data);
+};
+myComponent.one('eventName', myFunc);
+myComponent.trigger('eventName');
+// logs 'myFunc called' and 'undefined'
+
+myComponent.trigger({'type':'eventName'});
+// logs 'myFunc called' and 'undefined'
+
+myComponent.trigger('eventName', {data: 'some data'});
+// logs 'myFunc called' and &quot;{data: 'some data'}&quot;
+
+myComponent.trigger({'type':'eventName'}, {data: 'some data'});
+// logs 'myFunc called' and &quot;{data: 'some data'}&quot;</code></pre><h2>Default Component Tree</h2><p>The default component structure of the Video.js player looks something like this:</p>
+<pre class="prettyprint source lang-tree"><code>Player
+├── MediaLoader (has no UI)
+├── PosterImage
+├── TextTrackDisplay
+├── LoadingSpinner
+├── BigPlayButton
+├─┬ ControlBar
+│ ├── PlayToggle
+│ ├── VolumeMenuButton
+│ ├── CurrentTimeDisplay (hidden by default)
+│ ├── TimeDivider (hidden by default)
+│ ├── DurationDisplay (hidden by default)
+│ ├─┬ ProgressControl (hidden during live playback)
+│ │ └─┬ SeekBar
+│ │   ├── LoadProgressBar
+│ │   ├── MouseTimeDisplay
+│ │   └── PlayProgressBar
+│ ├── LiveDisplay (hidden during VOD playback)
+│ ├── RemainingTimeDisplay
+│ ├── CustomControlSpacer (has no UI)
+│ ├── PlaybackRateMenuButton (hidden, unless playback tech supports rate changes)
+│ ├── ChaptersButton (hidden, unless there are relevant tracks)
+│ ├── DescriptionsButton (hidden, unless there are relevant tracks)
+│ ├── SubtitlesButton (hidden, unless there are relevant tracks)
+│ ├── CaptionsButton (hidden, unless there are relevant tracks)
+│ ├── AudioTrackButton (hidden, unless there are relevant tracks)
+│ └── FullscreenToggle
+├── ErrorDisplay (hidden, until there is an error)
+└── TextTrackSettings</code></pre><h2>Specific Component Details</h2><h3>Volume Panel</h3><p>The <code>VolumePanel</code> includes the <code>MuteToggle</code> and the <code>VolumeControl</code> Components, which will be hidden if volume changes are not supported. There is one important option for the <code>VolumePanel</code> which can make your <code>VolumeControl</code> appear vertically over the <code>MuteToggle</code>. This can be set by passing <code>VolumePanel</code> <code>{inline: false}</code> as the default behavior is a horizontal <code>VolumeControl</code> with <code>{inline: true}</code>.</p>
+<p>Example of a vertical <code>VolumeControl</code></p>
+<pre class="prettyprint source lang-js"><code>let player = videojs('myplayer', {
+  controlBar: {
+    volumePanel: {
+      inline: false
+    }
+  }
+});</code></pre><h3>Text Track Settings</h3><p>The text track settings component is only available when using emulated text tracks.</p>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +301,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

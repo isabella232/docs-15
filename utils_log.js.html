@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: utils/log.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,214 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file log.js
+ * @module log
+ */
+import window from 'global/window';
+import {IE_VERSION} from './browser';
+import {isObject} from './obj';
+
+let log;
+
+// This is the private tracking variable for logging level.
+let level = 'all';
+
+// This is the private tracking variable for the logging history.
+let history = [];
+
+/**
+ * Log messages to the console and history based on the type of message
+ *
+ * @private
+ * @param  {string} type
+ *         The name of the console method to use.
+ *
+ * @param  {Array} args
+ *         The arguments to be passed to the matching console method.
+ *
+ * @param  {boolean} [stringify]
+ *         By default, only old IEs should get console argument stringification,
+ *         but this is exposed as a parameter to facilitate testing.
+ */
+export const logByType = (type, args, stringify = !!IE_VERSION &amp;&amp; IE_VERSION &lt; 11) => {
+  const lvl = log.levels[level];
+  const lvlRegExp = new RegExp(`^(${lvl})$`);
+
+  if (type !== 'log') {
+
+    // Add the type to the front of the message when it's not "log".
+    args.unshift(type.toUpperCase() + ':');
+  }
+
+  // Add a clone of the args at this point to history.
+  if (history) {
+    history.push([].concat(args));
+  }
+
+  // Add console prefix after adding to history.
+  args.unshift('VIDEOJS:');
+
+  // If there's no console then don't try to output messages, but they will
+  // still be stored in history.
+  //
+  // Was setting these once outside of this function, but containing them
+  // in the function makes it easier to test cases where console doesn't exist
+  // when the module is executed.
+  const fn = window.console &amp;&amp; window.console[type];
+
+  // Bail out if there's no console or if this type is not allowed by the
+  // current logging level.
+  if (!fn || !lvl || !lvlRegExp.test(type)) {
+    return;
+  }
+
+  // IEs previous to 11 log objects uselessly as "[object Object]"; so, JSONify
+  // objects and arrays for those less-capable browsers.
+  if (stringify) {
+    args = args.map(a => {
+      if (isObject(a) || Array.isArray(a)) {
+        try {
+          return JSON.stringify(a);
+        } catch (x) {
+          return String(a);
+        }
+      }
+
+      // Cast to string before joining, so we get null and undefined explicitly
+      // included in output (as we would in a modern console).
+      return String(a);
+    }).join(' ');
+  }
+
+  // Old IE versions do not allow .apply() for console methods (they are
+  // reported as objects rather than functions).
+  if (!fn.apply) {
+    fn(args);
+  } else {
+    fn[Array.isArray(args) ? 'apply' : 'call'](window.console, args);
+  }
+};
+
+/**
+ * Logs plain debug messages. Similar to `console.log`.
+ *
+ * @class
+ * @param    {Mixed[]} args
+ *           One or more messages or objects that should be logged.
+ */
+log = function(...args) {
+  logByType('log', args);
+};
+
+/**
+ * Enumeration of available logging levels, where the keys are the level names
+ * and the values are `|`-separated strings containing logging methods allowed
+ * in that logging level. These strings are used to create a regular expression
+ * matching the function name being called.
+ *
+ * Levels provided by video.js are:
+ *
+ * - `off`: Matches no calls. Any value that can be cast to `false` will have
+ *   this effect. The most restrictive.
+ * - `all` (default): Matches only Video.js-provided functions (`log`,
+ *   `log.warn`, and `log.error`).
+ * - `warn`: Matches `log.warn` and `log.error` calls.
+ * - `error`: Matches only `log.error` calls.
+ *
+ * @type {Object}
+ */
+log.levels = {
+  all: 'log|warn|error',
+  error: 'error',
+  off: '',
+  warn: 'warn|error',
+  DEFAULT: level
+};
+
+/**
+ * Get or set the current logging level. If a string matching a key from
+ * {@link log.levels} is provided, acts as a setter. Regardless of argument,
+ * returns the current logging level.
+ *
+ * @param  {string} [lvl]
+ *         Pass to set a new logging level.
+ *
+ * @return {string}
+ *         The current logging level.
+ */
+log.level = (lvl) => {
+  if (typeof lvl === 'string') {
+    if (!log.levels.hasOwnProperty(lvl)) {
+      throw new Error(`"${lvl}" in not a valid log level`);
+    }
+    level = lvl;
+  }
+  return level;
+};
+
+/**
+ * Returns an array containing everything that has been logged to the history.
+ *
+ * This array is a shallow clone of the internal history record. However, its
+ * contents are _not_ cloned; so, mutating objects inside this array will
+ * mutate them in history.
+ *
+ * @return {Array}
+ */
+log.history = () => history ? [].concat(history) : [];
+
+/**
+ * Clears the internal history tracking, but does not prevent further history
+ * tracking.
+ */
+log.history.clear = () => {
+  if (history) {
+    history.length = 0;
+  }
+};
+
+/**
+ * Disable history tracking if it is currently enabled.
+ */
+log.history.disable = () => {
+  if (history !== null) {
+    history.length = 0;
+    history = null;
+  }
+};
+
+/**
+ * Enable history tracking if it is currently disabled.
+ */
+log.history.enable = () => {
+  if (history === null) {
+    history = [];
+  }
+};
+
+/**
+ * Logs error messages. Similar to `console.error`.
+ *
+ * @param {Mixed[]} args
+ *        One or more messages or objects that should be logged as an error
+ */
+log.error = (...args) => logByType('error', args);
+
+/**
+ * Logs warning messages. Similar to `console.warn`.
+ *
+ * @param {Mixed[]} args
+ *        One or more messages or objects that should be logged as a warning.
+ */
+log.warn = (...args) => logByType('warn', args);
+
+export default log;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +283,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

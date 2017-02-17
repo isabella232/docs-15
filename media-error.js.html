@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: media-error.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,225 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file media-error.js
+ */
+import {assign, isObject} from './utils/obj';
+
+/**
+ * A Custom `MediaError` class which mimics the standard HTML5 `MediaError` class.
+ *
+ * @param {number|string|Object|MediaError} value
+ *        This can be of multiple types:
+ *        - number: should be a standard error code
+ *        - string: an error message (the code will be 0)
+ *        - Object: arbitrary properties
+ *        - `MediaError` (native): used to populate a video.js `MediaError` object
+ *        - `MediaError` (video.js): will return itself if it's already a
+ *          video.js `MediaError` object.
+ *
+ * @see [MediaError Spec]{@link https://dev.w3.org/html5/spec-author-view/video.html#mediaerror}
+ * @see [Encrypted MediaError Spec]{@link https://www.w3.org/TR/2013/WD-encrypted-media-20130510/#error-codes}
+ *
+ * @class MediaError
+ */
+function MediaError(value) {
+
+  // Allow redundant calls to this constructor to avoid having `instanceof`
+  // checks peppered around the code.
+  if (value instanceof MediaError) {
+    return value;
+  }
+
+  if (typeof value === 'number') {
+    this.code = value;
+  } else if (typeof value === 'string') {
+    // default code is zero, so this is a custom error
+    this.message = value;
+  } else if (isObject(value)) {
+
+    // We assign the `code` property manually because native `MediaError` objects
+    // do not expose it as an own/enumerable property of the object.
+    if (typeof value.code === 'number') {
+      this.code = value.code;
+    }
+
+    assign(this, value);
+  }
+
+  if (!this.message) {
+    this.message = MediaError.defaultMessages[this.code] || '';
+  }
+}
+
+/**
+ * The error code that refers two one of the defined `MediaError` types
+ *
+ * @type {Number}
+ */
+MediaError.prototype.code = 0;
+
+/**
+ * An optional message that to show with the error. Message is not part of the HTML5
+ * video spec but allows for more informative custom errors.
+ *
+ * @type {String}
+ */
+MediaError.prototype.message = '';
+
+/**
+ * An optional status code that can be set by plugins to allow even more detail about
+ * the error. For example a plugin might provide a specific HTTP status code and an
+ * error message for that code. Then when the plugin gets that error this class will
+ * know how to display an error message for it. This allows a custom message to show
+ * up on the `Player` error overlay.
+ *
+ * @type {Array}
+ */
+MediaError.prototype.status = null;
+
+/**
+ * Errors indexed by the W3C standard. The order **CANNOT CHANGE**! See the
+ * specification listed under {@link MediaError} for more information.
+ *
+ * @enum {array}
+ * @readonly
+ * @property {string} 0 - MEDIA_ERR_CUSTOM
+ * @property {string} 1 - MEDIA_ERR_CUSTOM
+ * @property {string} 2 - MEDIA_ERR_ABORTED
+ * @property {string} 3 - MEDIA_ERR_NETWORK
+ * @property {string} 4 - MEDIA_ERR_SRC_NOT_SUPPORTED
+ * @property {string} 5 - MEDIA_ERR_ENCRYPTED
+ */
+MediaError.errorTypes = [
+  'MEDIA_ERR_CUSTOM',
+  'MEDIA_ERR_ABORTED',
+  'MEDIA_ERR_NETWORK',
+  'MEDIA_ERR_DECODE',
+  'MEDIA_ERR_SRC_NOT_SUPPORTED',
+  'MEDIA_ERR_ENCRYPTED'
+];
+
+/**
+ * The default `MediaError` messages based on the {@link MediaError.errorTypes}.
+ *
+ * @type {Array}
+ * @constant
+ */
+MediaError.defaultMessages = {
+  1: 'You aborted the media playback',
+  2: 'A network error caused the media download to fail part-way.',
+  3: 'The media playback was aborted due to a corruption problem or because the media used features your browser did not support.',
+  4: 'The media could not be loaded, either because the server or network failed or because the format is not supported.',
+  5: 'The media is encrypted and we do not have the keys to decrypt it.'
+};
+
+// Add types as properties on MediaError
+// e.g. MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
+for (let errNum = 0; errNum &lt; MediaError.errorTypes.length; errNum++) {
+  MediaError[MediaError.errorTypes[errNum]] = errNum;
+  // values should be accessible on both the class and instance
+  MediaError.prototype[MediaError.errorTypes[errNum]] = errNum;
+}
+
+// jsdocs for instance/static members added above
+// instance methods use `#` and static methods use `.`
+/**
+ * W3C error code for any custom error.
+ *
+ * @member MediaError#MEDIA_ERR_CUSTOM
+ * @constant {number}
+ * @default 0
+ */
+/**
+ * W3C error code for any custom error.
+ *
+ * @member MediaError.MEDIA_ERR_CUSTOM
+ * @constant {number}
+ * @default 0
+ */
+
+/**
+ * W3C error code for media error aborted.
+ *
+ * @member MediaError#MEDIA_ERR_ABORTED
+ * @constant {number}
+ * @default 1
+ */
+/**
+ * W3C error code for media error aborted.
+ *
+ * @member MediaError.MEDIA_ERR_ABORTED
+ * @constant {number}
+ * @default 1
+ */
+
+/**
+ * W3C error code for any network error.
+ *
+ * @member MediaError#MEDIA_ERR_NETWORK
+ * @constant {number}
+ * @default 2
+ */
+/**
+ * W3C error code for any network error.
+ *
+ * @member MediaError.MEDIA_ERR_NETWORK
+ * @constant {number}
+ * @default 2
+ */
+
+/**
+ * W3C error code for any decoding error.
+ *
+ * @member MediaError#MEDIA_ERR_DECODE
+ * @constant {number}
+ * @default 3
+ */
+/**
+ * W3C error code for any decoding error.
+ *
+ * @member MediaError.MEDIA_ERR_DECODE
+ * @constant {number}
+ * @default 3
+ */
+
+/**
+ * W3C error code for any time that a source is not supported.
+ *
+ * @member MediaError#MEDIA_ERR_SRC_NOT_SUPPORTED
+ * @constant {number}
+ * @default 4
+ */
+/**
+ * W3C error code for any time that a source is not supported.
+ *
+ * @member MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
+ * @constant {number}
+ * @default 4
+ */
+
+/**
+ * W3C error code for any time that a source is encrypted.
+ *
+ * @member MediaError#MEDIA_ERR_ENCRYPTED
+ * @constant {number}
+ * @default 5
+ */
+/**
+ * W3C error code for any time that a source is encrypted.
+ *
+ * @member MediaError.MEDIA_ERR_ENCRYPTED
+ * @constant {number}
+ * @default 5
+ */
+
+export default MediaError;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +294,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

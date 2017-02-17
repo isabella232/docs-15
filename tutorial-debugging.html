@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: debugging | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,108 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>debugging</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+        <article class="readme">
+            <h1>Debugging</h1><h2>Table of Contents</h2><ul>
+<li><a href="#logging">Logging</a><ul>
+<li><a href="#api-overview">API Overview</a></li>
+<li><a href="#log-safely">Log Safely</a></li>
+<li><a href="#log-objects-usefully">Log Objects Usefully</a></li>
+<li><a href="#log-levels">Log Levels</a></li>
+<li><a href="#available-log-levels">Available Log Levels</a></li>
+<li><a href="#history">History</a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
+<h2>Logging</h2><p>Video.js includes a lightweight wrapper - <code>videojs.log</code> - around a subset of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console">the <code>console</code> API</a>. The available methods are <code>videojs.log</code>, <code>videojs.log.warn</code>, and <code>videojs.log.error</code>.</p>
+<h3>API Overview</h3><p>Most of these methods should be fairly self-explanatory, but for complete details, see <a href="http://docs.videojs.com/docs/api/index.html">the API docs</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Alias Of</th>
+<th>Matching Level(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>videojs.log()</code></td>
+<td><code>console.log</code></td>
+<td>all</td>
+</tr>
+<tr>
+<td><code>videojs.log.warn()</code></td>
+<td><code>console.warn</code></td>
+<td>all, warn</td>
+</tr>
+<tr>
+<td><code>videojs.log.error()</code></td>
+<td><code>console.error</code></td>
+<td>all, warn, error</td>
+</tr>
+<tr>
+<td><code>videojs.log.level()</code></td>
+<td>n/a</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><code>videojs.log.history()</code></td>
+<td>n/a</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><code>videojs.log.history.clear()</code></td>
+<td>n/a</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><code>videojs.log.history.disable()</code></td>
+<td>n/a</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><code>videojs.log.history.enable()</code></td>
+<td>n/a</td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table>
+<p>For descriptions of these features, please refer to the sections below.</p>
+<h3>Log Safely</h3><p>Unlike the <code>console</code>, it's safe to leave <code>videojs.log</code> calls in your code. They won't throw errors when the <code>console</code> doesn't exist.</p>
+<h3>Log Objects Usefully</h3><p>Similar to the <code>console</code>, any number of mixed-type values can be passed to <code>videojs.log</code> methods:</p>
+<pre class="prettyprint source lang-js"><code>videojs.log('this is a string', {butThis: 'is an object'});</code></pre><p>However, certain browser consoles (namely, IE10 and lower) do not support non-string values. Video.js improves on this situation by passing objects through <code>JSON.stringify</code> before logging them in IE10 and below. In other words, instead of the above producing this:</p>
+<pre class="prettyprint source lang-txt"><code>VIDEOJS: this is a string [object Object]</code></pre><p>it will produce this:</p>
+<pre class="prettyprint source lang-txt"><code>VIDEOJS: this is a string {&quot;butThis&quot;: &quot;is an object&quot;}</code></pre><h3>Log Levels</h3><p>Unlike the <code>console</code>, <code>videojs.log</code> includes the concept of logging levels. These levels toggle logging methods on or off.</p>
+<p>Levels are exposed through the <code>videojs.log.level</code> method. This method acts as both a getter and setter for the current logging level. With no arguments, it returns the current logging level:</p>
+<pre class="prettyprint source lang-js"><code>videojs.log.level(); // &quot;all&quot;</code></pre><p>By passing a string, the logging level can be changed to one of the available logging levels:</p>
+<pre class="prettyprint source lang-js"><code>videojs.log.level('error'); // show only error messages and suppress others
+videojs.log('foo'); // does nothing
+videojs.log.warn('foo'); // does nothing
+videojs.log.error('foo'); // logs &quot;foo&quot; as an error</code></pre><h3>Available Log Levels</h3><ul>
+<li><strong>all</strong> (default): enables all logging methods</li>
+<li><strong>error</strong>: only show <code>log.error</code> messages</li>
+<li><strong>off</strong>: disable all logging methods</li>
+<li><strong>warn</strong>: only show <code>log.warn</code> <em>and</em> <code>log.error</code> messages</li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
-
-
-
+<h3>History</h3><blockquote>
+<p><strong>Note:</strong> In Video.js 5, <code>videojs.log.history</code> was an array. As of Video.js 6, it is a function which returns an array. This change was made to provide a richer, safer logging history API.</p>
+</blockquote>
+<p>By default, the <code>videojs.log</code> module tracks a history of <em>everything</em> passed to it regardless of logging level:</p>
+<pre class="prettyprint source lang-js"><code>videojs.log.history(); // an array of everything that's been logged up to now</code></pre><p>This will work even when logging is set to <strong>off</strong>.</p>
+<p>This can be useful, but it can also be a source of memory leaks. For example, logged objects will be retained in history even if references are removed everywhere else!</p>
+<p>To avoid this problem, history can be disabled or enabled via method calls (using the <code>disable</code> and <code>enable</code> methods respectively). Disabling history is as easy as:</p>
+<pre class="prettyprint source lang-js"><code>videojs.log.history.disable();</code></pre><p>Finally, the history (if enabled) can be cleared at any time via:</p>
+<pre class="prettyprint source lang-js"><code>videojs.log.history.clear();</code></pre>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +171,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

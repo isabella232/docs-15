@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: tech | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,70 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>tech</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
-
-
-
+        <article class="readme">
+            <h1>Playback Technology (&quot;Tech&quot;)</h1><p>Playback Technology refers to the specific browser or plugin technology used to play the video or audio. When using HTML5, the playback technology is the video or audio element. When using Flash, the playback technology is the specific Flash player used, e.g. Flowplayer, YouTube Player, video-js.swf, etc. (not just &quot;Flash&quot;). This could also include Silverlight, Quicktime, or any other plugin that will play back video in the browser, as long as there is an API wrapper written for it.</p>
+<p>Essentially we're using HTML5 and plugins only as video decoders, and using HTML and JavaScript to create a consistent API and skinning experience across all of them.</p>
+<h2>Building an API Wrapper</h2><p>We'll write a more complete guide on writing a wrapper soon, but for now the best resource is the <a href="https://github.com/zencoder/video-js/tree/master/src">Video.js</a> source where you can see how both the HTML5 and video-js.swf API wrappers were created.</p>
+<h2>Required Methods</h2><p>canPlayType
+play
+pause
+currentTime
+volume
+duration
+buffered
+supportsFullScreen</p>
+<h2>Required Events</h2><p>loadstart
+play
+pause
+playing
+ended
+volumechange
+durationchange
+error</p>
+<h2>Optional Events (include if supported)</h2><p>timeupdate
+progress
+enterFullScreen
+exitFullScreen</p>
+<h2>Adding Playback Technology</h2><p>When adding additional Tech to a video player, make sure to add the supported tech to the video object.</p>
+<h3>Tag Method:</h3><pre class="prettyprint source lang-html"><code>&lt;video data-setup='{&quot;techOrder&quot;: [&quot;html5&quot;, &quot;flash&quot;, &quot;other supported tech&quot;]}'></code></pre><h3>Object Method:</h3><pre class="prettyprint source lang-js"><code>videojs(&quot;videoID&quot;, {
+  techOrder: [&quot;html5&quot;, &quot;flash&quot;, &quot;other supported tech&quot;]
+});</code></pre><h2>Technology Ordering</h2><p>By default Video.js performs &quot;Tech-first&quot; ordering when it searches for a source/tech combination to play videos. This means that if you have two sources and two techs, video.js will try to play each video with the first tech in the <code>techOrder</code> option property before moving on to try the next playback technology.</p>
+<p>Tech-first ordering can present a problem if you have a <code>sourceHandler</code> that supports both <code>Html5</code> and <code>Flash</code> techs such as videojs-contrib-hls.</p>
+<p>For example, given the following video element:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video data-setup='{&quot;techOrder&quot;: [&quot;html5&quot;, &quot;flash&quot;]}'>
+  &lt;source src=&quot;http://your.static.provider.net/path/to/video.m3u8&quot; type=&quot;application/x-mpegURL&quot;>
+  &lt;source src=&quot;http://your.static.provider.net/path/to/video.mp4&quot; type=&quot;video/mp4&quot;>
+&lt;/video></code></pre><p>There is a good chance that the mp4 source will be selected on platforms that do not have media source extensions. Video.js will try all sources against the first playback technology, in this case <code>Html5</code>, and select the first source that can play - in this case MP4.</p>
+<p>In &quot;Tech-first&quot; mode, the tests run something like this:
+  Can video.m3u8 play with Html5? No...
+  Can video.mp4 play with Html5? Yes! Use the second source.</p>
+<p>Video.js now provides another method of selecting the source - &quot;Source-first&quot; ordering. In this mode, Video.js tries the first source against every tech in <code>techOrder</code> before moving onto the next source.</p>
+<p>With a player setup as follows:</p>
+<pre class="prettyprint source lang-html"><code>&lt;video data-setup='{&quot;techOrder&quot;: [&quot;html5&quot;, &quot;flash&quot;], &quot;sourceOrder&quot;: true}'>
+  &lt;source src=&quot;http://your.static.provider.net/path/to/video.m3u8&quot; type=&quot;application/x-mpegURL&quot;>
+  &lt;source src=&quot;http://your.static.provider.net/path/to/video.mp4&quot; type=&quot;video/mp4&quot;>
+&lt;/video></code></pre><p>The Flash-based HLS support will be tried before falling back to the MP4 source.</p>
+<p>In &quot;Source-first&quot; mode, the tests run something like this:
+  Can video.m3u8 play with Html5? No...
+  Can video.m3u8 play with Flash? Yes! Use the first source.</p>
+<h2>Flash Technology</h2><p>The Flash playback tech is a part of the default <code>techOrder</code>. You may notice undesirable playback behavior in browsers that are subject to using this playback tech, in particular when scrubbing and seeking within a video. This behavior is a result of Flash's progressive video playback.</p>
+<h3>Enabling Streaming Playback</h3><p>In order to force the Flash tech to choose streaming playback, you need to provide a valid streaming source <strong>before other valid Flash video sources</strong>. This is necessary because of the source selection algorithm, where playback tech chooses the first possible source object with a valid type. Valid streaming <code>type</code> values include <code>rtmp/mp4</code> and <code>rtmp/flv</code>. The streaming <code>src</code> value requires valid connection and stream strings, separated by an <code>&amp;</code>. An example of supplying a streaming source through your HTML markup might look like:</p>
+<pre class="prettyprint source lang-html"><code>&lt;source src=&quot;rtmp://your.streaming.provider.net/cfx/st/&mp4:path/to/video.mp4&quot; type=&quot;rtmp/mp4&quot;>
+&lt;source src=&quot;http://your.static.provider.net/path/to/video.mp4&quot; type=&quot;video/mp4&quot;>
+&lt;source src=&quot;http://your.static.provider.net/path/to/video.webm&quot; type=&quot;video/webm&quot;></code></pre><p>You may optionally use the last <code>/</code> as the separator between connection and stream strings, for example:</p>
+<pre class="prettyprint source lang-html"><code>&lt;source src=&quot;rtmp://your.streaming.provider.net/cfx/st/mp4:video.mp4&quot; type=&quot;rtmp/mp4&quot;></code></pre><p>All four RTMP protocols are valid in the <code>src</code> (RTMP, RTMPT, RTMPE, and RTMPS).</p>
+<h4>A note on sandboxing and security</h4><p>In some environments, such as Electron and NW.js apps, stricter policies are enforced, and <code>.swf</code> files won’t be able to communicate with the outside world out of the box. To stream media, you have to add them to a special manifest of trusted files. <a href="https://github.com/szwacz/nw-flash-trust">nw-flash-trust</a> makes this job easy.</p>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +133,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

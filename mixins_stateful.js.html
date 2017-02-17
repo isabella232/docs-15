@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: mixins/stateful.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,131 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file mixins/stateful.js
+ * @module stateful
+ */
+import {isEvented} from './evented';
+import * as Obj from '../utils/obj';
+
+/**
+ * Contains methods that provide statefulness to an object which is passed
+ * to {@link module:stateful}.
+ *
+ * @mixin StatefulMixin
+ */
+const StatefulMixin = {
+
+  /**
+   * A hash containing arbitrary keys and values representing the state of
+   * the object.
+   *
+   * @type {Object}
+   */
+  state: {},
+
+  /**
+   * Set the state of an object by mutating its
+   * {@link module:stateful~StatefulMixin.state|state} object in place.
+   *
+   * @fires   module:stateful~StatefulMixin#statechanged
+   * @param   {Object|Function} stateUpdates
+   *          A new set of properties to shallow-merge into the plugin state.
+   *          Can be a plain object or a function returning a plain object.
+   *
+   * @returns {Object|undefined}
+   *          An object containing changes that occurred. If no changes
+   *          occurred, returns `undefined`.
+   */
+  setState(stateUpdates) {
+
+    // Support providing the `stateUpdates` state as a function.
+    if (typeof stateUpdates === 'function') {
+      stateUpdates = stateUpdates();
+    }
+
+    let changes;
+
+    Obj.each(stateUpdates, (value, key) => {
+
+      // Record the change if the value is different from what's in the
+      // current state.
+      if (this.state[key] !== value) {
+        changes = changes || {};
+        changes[key] = {
+          from: this.state[key],
+          to: value
+        };
+      }
+
+      this.state[key] = value;
+    });
+
+    // Only trigger "statechange" if there were changes AND we have a trigger
+    // function. This allows us to not require that the target object be an
+    // evented object.
+    if (changes &amp;&amp; isEvented(this)) {
+
+      /**
+       * An event triggered on an object that is both
+       * {@link module:stateful|stateful} and {@link module:evented|evented}
+       * indicating that its state has changed.
+       *
+       * @event    module:stateful~StatefulMixin#statechanged
+       * @type     {Object}
+       * @property {Object} changes
+       *           A hash containing the properties that were changed and
+       *           the values they were changed `from` and `to`.
+       */
+      this.trigger({
+        changes,
+        type: 'statechanged'
+      });
+    }
+
+    return changes;
+  }
+};
+
+/**
+ * Applies {@link module:stateful~StatefulMixin|StatefulMixin} to a target
+ * object.
+ *
+ * If the target object is {@link module:evented|evented} and has a
+ * `handleStateChanged` method, that method will be automatically bound to the
+ * `statechanged` event on itself.
+ *
+ * @param   {Object} target
+ *          The object to be made stateful.
+ *
+ * @param   {Object} [defaultState]
+ *          A default set of properties to populate the newly-stateful object's
+ *          `state` property.
+ *
+ * @returns {Object}
+ *          Returns the `target`.
+ */
+function stateful(target, defaultState) {
+  Obj.assign(target, StatefulMixin);
+
+  // This happens after the mixing-in because we need to replace the `state`
+  // added in that step.
+  target.state = Obj.assign({}, target.state, defaultState);
+
+  // Auto-bind the `handleStateChanged` method of the target object if it exists.
+  if (typeof target.handleStateChanged === 'function' &amp;&amp; isEvented(target)) {
+    target.on('statechanged', target.handleStateChanged);
+  }
+
+  return target;
+}
+
+export default stateful;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +200,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

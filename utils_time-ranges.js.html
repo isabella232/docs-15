@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: utils/time-ranges.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,141 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file time-ranges.js
+ * @module time-ranges
+ */
+
+/**
+ * Returns the time for the specified index at the start or end
+ * of a TimeRange object.
+ *
+ * @function time-ranges:indexFunction
+ *
+ * @param {number} [index=0]
+ *        The range number to return the time for.
+ *
+ * @return {number}
+ *         The time that offset at the specified index.
+ *
+ * @depricated index must be set to a value, in the future this will throw an error.
+ */
+
+/**
+ * An object that contains ranges of time for various reasons.
+ *
+ * @typedef {Object} TimeRange
+ *
+ * @property {number} length
+ *           The number of time ranges represented by this Object
+ *
+ * @property {time-ranges:indexFunction} start
+ *           Returns the time offset at which a specified time range begins.
+ *
+ * @property {time-ranges:indexFunction} end
+ *           Returns the time offset at which a specified time range begins.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges
+ */
+
+/**
+ * Check if any of the time ranges are over the maximum index.
+ *
+ * @param {string} fnName
+ *        The function name to use for logging
+ *
+ * @param {number} index
+ *        The index to check
+ *
+ * @param {number} maxIndex
+ *        The maximum possible index
+ *
+ * @throws {Error} if the timeRanges provided are over the maxIndex
+ */
+function rangeCheck(fnName, index, maxIndex) {
+  if (typeof index !== 'number' || index &lt; 0 || index > maxIndex) {
+    throw new Error(`Failed to execute '${fnName}' on 'TimeRanges': The index provided (${index}) is non-numeric or out of bounds (0-${maxIndex}).`);
+  }
+}
+
+/**
+ * Check if any of the time ranges are over the maximum index.
+ *
+ * @param {string} fnName
+ *        The function name to use for logging
+ *
+ * @param {string} valueIndex
+ *        The proprety that should be used to get the time. should be 'start' or 'end'
+ *
+ * @param {Array} ranges
+ *        An array of time ranges
+ *
+ * @param {Array} [rangeIndex=0]
+ *        The index to start the search at
+ *
+ * @return {number}
+ *         The time that offset at the specified index.
+ *
+ *
+ * @depricated rangeIndex must be set to a value, in the future this will throw an error.
+ * @throws {Error} if rangeIndex is more than the length of ranges
+ */
+function getRange(fnName, valueIndex, ranges, rangeIndex) {
+  rangeCheck(fnName, rangeIndex, ranges.length - 1);
+  return ranges[rangeIndex][valueIndex];
+}
+
+/**
+ * Create a time range object givent ranges of time.
+ *
+ * @param {Array} [ranges]
+ *        An array of time ranges.
+ */
+function createTimeRangesObj(ranges) {
+  if (ranges === undefined || ranges.length === 0) {
+    return {
+      length: 0,
+      start() {
+        throw new Error('This TimeRanges object is empty');
+      },
+      end() {
+        throw new Error('This TimeRanges object is empty');
+      }
+    };
+  }
+  return {
+    length: ranges.length,
+    start: getRange.bind(null, 'start', 0, ranges),
+    end: getRange.bind(null, 'end', 1, ranges)
+  };
+}
+
+/**
+ * Should create a fake `TimeRange` object which mimics an HTML5 time range instance.
+ *
+ * @param {number|Array} start
+ *        The start of a single range or an array of ranges
+ *
+ * @param {number} end
+ *        The end of a single range.
+ *
+ * @private
+ */
+export function createTimeRanges(start, end) {
+  if (Array.isArray(start)) {
+    return createTimeRangesObj(start);
+  } else if (start === undefined || end === undefined) {
+    return createTimeRangesObj();
+  }
+  return createTimeRangesObj([[start, end]]);
+}
+
+export { createTimeRanges as createTimeRange };
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +210,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

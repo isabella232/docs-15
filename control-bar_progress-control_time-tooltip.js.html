@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: control-bar/progress-control/time-tooltip.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,98 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file time-tooltip.js
+ */
+import Component from '../../component';
+import * as Dom from '../../utils/dom.js';
+
+/**
+ * Time tooltips display a time above the progress bar.
+ *
+ * @extends Component
+ */
+class TimeTooltip extends Component {
+
+  /**
+   * Create the time tooltip DOM element
+   *
+   * @return {Element}
+   *         The element that was created.
+   */
+  createEl() {
+    return super.createEl('div', {
+      className: 'vjs-time-tooltip'
+    });
+  }
+
+  /**
+   * Updates the position of the time tooltip relative to the `SeekBar`.
+   *
+   * @param {Object} seekBarRect
+   *        The `ClientRect` for the {@link SeekBar} element.
+   *
+   * @param {number} seekBarPoint
+   *        A number from 0 to 1, representing a horizontal reference point
+   *        from the left edge of the {@link SeekBar}
+   */
+  update(seekBarRect, seekBarPoint, content) {
+    const tooltipRect = Dom.getBoundingClientRect(this.el_);
+    const playerRect = Dom.getBoundingClientRect(this.player_.el());
+    const seekBarPointPx = seekBarRect.width * seekBarPoint;
+
+    // do nothing if either rect isn't available
+    // for example, if the player isn't in the DOM for testing
+    if (!playerRect || !tooltipRect) {
+      return;
+    }
+
+    // This is the space left of the `seekBarPoint` available within the bounds
+    // of the player. We calculate any gap between the left edge of the player
+    // and the left edge of the `SeekBar` and add the number of pixels in the
+    // `SeekBar` before hitting the `seekBarPoint`
+    const spaceLeftOfPoint = (seekBarRect.left - playerRect.left) + seekBarPointPx;
+
+    // This is the space right of the `seekBarPoint` available within the bounds
+    // of the player. We calculate the number of pixels from the `seekBarPoint`
+    // to the right edge of the `SeekBar` and add to that any gap between the
+    // right edge of the `SeekBar` and the player.
+    const spaceRightOfPoint = (seekBarRect.width - seekBarPointPx) +
+      (playerRect.right - seekBarRect.right);
+
+    // This is the number of pixels by which the tooltip will need to be pulled
+    // further to the right to center it over the `seekBarPoint`.
+    let pullTooltipBy = tooltipRect.width / 2;
+
+    // Adjust the `pullTooltipBy` distance to the left or right depending on
+    // the results of the space calculations above.
+    if (spaceLeftOfPoint &lt; pullTooltipBy) {
+      pullTooltipBy += pullTooltipBy - spaceLeftOfPoint;
+    } else if (spaceRightOfPoint &lt; pullTooltipBy) {
+      pullTooltipBy = spaceRightOfPoint;
+    }
+
+    // Due to the imprecision of decimal/ratio based calculations and varying
+    // rounding behaviors, there are cases where the spacing adjustment is off
+    // by a pixel or two. This adds insurance to these calculations.
+    if (pullTooltipBy &lt; 0) {
+      pullTooltipBy = 0;
+    } else if (pullTooltipBy > tooltipRect.width) {
+      pullTooltipBy = tooltipRect.width;
+    }
+
+    this.el_.style.right = `-${pullTooltipBy}px`;
+    Dom.textContent(this.el_, content);
+  }
+}
+
+Component.registerComponent('TimeTooltip', TimeTooltip);
+export default TimeTooltip;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +167,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: tracks/text-track.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,394 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file text-track.js
+ */
+import TextTrackCueList from './text-track-cue-list';
+import * as Fn from '../utils/fn.js';
+import {TextTrackKind, TextTrackMode} from './track-enums';
+import log from '../utils/log.js';
+import window from 'global/window';
+import Track from './track.js';
+import { isCrossOrigin } from '../utils/url.js';
+import XHR from 'xhr';
+import merge from '../utils/merge-options';
+import * as browser from '../utils/browser.js';
+
+/**
+ * Takes a webvtt file contents and parses it into cues
+ *
+ * @param {string} srcContent
+ *        webVTT file contents
+ *
+ * @param {TextTrack} track
+ *        TextTrack to add cues to. Cues come from the srcContent.
+ *
+ * @private
+ */
+const parseCues = function(srcContent, track) {
+  const parser = new window.WebVTT.Parser(window,
+                                          window.vttjs,
+                                          window.WebVTT.StringDecoder());
+  const errors = [];
+
+  parser.oncue = function(cue) {
+    track.addCue(cue);
+  };
+
+  parser.onparsingerror = function(error) {
+    errors.push(error);
+  };
+
+  parser.onflush = function() {
+    track.trigger({
+      type: 'loadeddata',
+      target: track
+    });
+  };
+
+  parser.parse(srcContent);
+  if (errors.length > 0) {
+    if (window.console &amp;&amp; window.console.groupCollapsed) {
+      window.console.groupCollapsed(`Text Track parsing errors for ${track.src}`);
+    }
+    errors.forEach((error) => log.error(error));
+    if (window.console &amp;&amp; window.console.groupEnd) {
+      window.console.groupEnd();
+    }
+  }
+
+  parser.flush();
+};
+
+/**
+ * Load a `TextTrack` from a specifed url.
+ *
+ * @param {string} src
+ *        Url to load track from.
+ *
+ * @param {TextTrack} track
+ *        Track to add cues to. Comes from the content at the end of `url`.
+ *
+ * @private
+ */
+const loadTrack = function(src, track) {
+  const opts = {
+    uri: src
+  };
+  const crossOrigin = isCrossOrigin(src);
+
+  if (crossOrigin) {
+    opts.cors = crossOrigin;
+  }
+
+  XHR(opts, Fn.bind(this, function(err, response, responseBody) {
+    if (err) {
+      return log.error(err, response);
+    }
+
+    track.loaded_ = true;
+
+    // Make sure that vttjs has loaded, otherwise, wait till it finished loading
+    // NOTE: this is only used for the alt/video.novtt.js build
+    if (typeof window.WebVTT !== 'function') {
+      if (track.tech_) {
+        const loadHandler = () => parseCues(responseBody, track);
+
+        track.tech_.on('vttjsloaded', loadHandler);
+        track.tech_.on('vttjserror', () => {
+          log.error(`vttjs failed to load, stopping trying to process ${track.src}`);
+          track.tech_.off('vttjsloaded', loadHandler);
+        });
+
+      }
+    } else {
+      parseCues(responseBody, track);
+    }
+
+  }));
+};
+
+/**
+ * A representation of a single `TextTrack`.
+ *
+ * @see [Spec]{@link https://html.spec.whatwg.org/multipage/embedded-content.html#texttrack}
+ * @extends Track
+ */
+class TextTrack extends Track {
+
+  /**
+   * Create an instance of this class.
+   *
+   * @param {Object} options={}
+   *        Object of option names and values
+   *
+   * @param {Tech} options.tech
+   *        A reference to the tech that owns this TextTrack.
+   *
+   * @param {TextTrack~Kind} [options.kind='subtitles']
+   *        A valid text track kind.
+   *
+   * @param {TextTrack~Mode} [options.mode='disabled']
+   *        A valid text track mode.
+   *
+   * @param {string} [options.id='vjs_track_' + Guid.newGUID()]
+   *        A unique id for this TextTrack.
+   *
+   * @param {string} [options.label='']
+   *        The menu label for this track.
+   *
+   * @param {string} [options.language='']
+   *        A valid two character language code.
+   *
+   * @param {string} [options.srclang='']
+   *        A valid two character language code. An alternative, but deprioritized
+   *        vesion of `options.language`
+   *
+   * @param {string} [options.src]
+   *        A url to TextTrack cues.
+   *
+   * @param {boolean} [options.default]
+   *        If this track should default to on or off.
+   */
+  constructor(options = {}) {
+    if (!options.tech) {
+      throw new Error('A tech was not provided.');
+    }
+
+    const settings = merge(options, {
+      kind: TextTrackKind[options.kind] || 'subtitles',
+      language: options.language || options.srclang || ''
+    });
+    let mode = TextTrackMode[settings.mode] || 'disabled';
+    const default_ = settings.default;
+
+    if (settings.kind === 'metadata' || settings.kind === 'chapters') {
+      mode = 'hidden';
+    }
+    // on IE8 this will be a document element
+    // for every other browser this will be a normal object
+    const tt = super(settings);
+
+    tt.tech_ = settings.tech;
+
+    if (browser.IS_IE8) {
+      for (const prop in TextTrack.prototype) {
+        if (prop !== 'constructor') {
+          tt[prop] = TextTrack.prototype[prop];
+        }
+      }
+    }
+
+    tt.cues_ = [];
+    tt.activeCues_ = [];
+
+    const cues = new TextTrackCueList(tt.cues_);
+    const activeCues = new TextTrackCueList(tt.activeCues_);
+    let changed = false;
+    const timeupdateHandler = Fn.bind(tt, function() {
+
+      // Accessing this.activeCues for the side-effects of updating itself
+      // due to it's nature as a getter function. Do not remove or cues will
+      // stop updating!
+      /* eslint-disable no-unused-expressions */
+      this.activeCues;
+      /* eslint-enable no-unused-expressions */
+      if (changed) {
+        this.trigger('cuechange');
+        changed = false;
+      }
+    });
+
+    if (mode !== 'disabled') {
+      tt.tech_.on('timeupdate', timeupdateHandler);
+    }
+
+    /**
+     * @memberof TextTrack
+     * @member {boolean} default
+     *         If this track was set to be on or off by default. Cannot be changed after
+     *         creation.
+     * @instance
+     *
+     * @readonly
+     */
+    Object.defineProperty(tt, 'default', {
+      get() {
+        return default_;
+      },
+      set() {}
+    });
+
+    /**
+     * @memberof TextTrack
+     * @member {string} mode
+     *         Set the mode of this TextTrack to a valid {@link TextTrack~Mode}. Will
+     *         not be set if setting to an invalid mode.
+     * @instance
+     *
+     * @fires TextTrack#modechange
+     */
+    Object.defineProperty(tt, 'mode', {
+      get() {
+        return mode;
+      },
+      set(newMode) {
+        if (!TextTrackMode[newMode]) {
+          return;
+        }
+        mode = newMode;
+        if (mode === 'showing') {
+          this.tech_.on('timeupdate', timeupdateHandler);
+        }
+        /**
+         * An event that fires when mode changes on this track. This allows
+         * the TextTrackList that holds this track to act accordingly.
+         *
+         * > Note: This is not part of the spec!
+         *
+         * @event TextTrack#modechange
+         * @type {EventTarget~Event}
+         */
+        this.trigger('modechange');
+      }
+    });
+
+    /**
+     * @memberof TextTrack
+     * @member {TextTrackCueList} cues
+     *         The text track cue list for this TextTrack.
+     * @instance
+     */
+    Object.defineProperty(tt, 'cues', {
+      get() {
+        if (!this.loaded_) {
+          return null;
+        }
+
+        return cues;
+      },
+      set() {}
+    });
+
+    /**
+     * @memberof TextTrack
+     * @member {TextTrackCueList} activeCues
+     *         The list text track cues that are currently active for this TextTrack.
+     * @instance
+     */
+    Object.defineProperty(tt, 'activeCues', {
+      get() {
+        if (!this.loaded_) {
+          return null;
+        }
+
+        // nothing to do
+        if (this.cues.length === 0) {
+          return activeCues;
+        }
+
+        const ct = this.tech_.currentTime();
+        const active = [];
+
+        for (let i = 0, l = this.cues.length; i &lt; l; i++) {
+          const cue = this.cues[i];
+
+          if (cue.startTime &lt;= ct &amp;&amp; cue.endTime >= ct) {
+            active.push(cue);
+          } else if (cue.startTime === cue.endTime &amp;&amp;
+                     cue.startTime &lt;= ct &amp;&amp;
+                     cue.startTime + 0.5 >= ct) {
+            active.push(cue);
+          }
+        }
+
+        changed = false;
+
+        if (active.length !== this.activeCues_.length) {
+          changed = true;
+        } else {
+          for (let i = 0; i &lt; active.length; i++) {
+            if (this.activeCues_.indexOf(active[i]) === -1) {
+              changed = true;
+            }
+          }
+        }
+
+        this.activeCues_ = active;
+        activeCues.setCues_(this.activeCues_);
+
+        return activeCues;
+      },
+      set() {}
+    });
+
+    if (settings.src) {
+      tt.src = settings.src;
+      loadTrack(settings.src, tt);
+    } else {
+      tt.loaded_ = true;
+    }
+
+    return tt;
+  }
+
+  /**
+   * Add a cue to the internal list of cues.
+   *
+   * @param {TextTrack~Cue} cue
+   *        The cue to add to our internal list
+   */
+  addCue(cue) {
+    const tracks = this.tech_.textTracks();
+
+    for (let i = 0; i &lt; tracks.length; i++) {
+      if (tracks[i] !== this) {
+        tracks[i].removeCue(cue);
+      }
+    }
+
+    this.cues_.push(cue);
+    this.cues.setCues_(this.cues_);
+  }
+
+  /**
+   * Remove a cue from our internal list
+   *
+   * @param {TextTrack~Cue} removeCue
+   *        The cue to remove from our internal list
+   */
+  removeCue(removeCue) {
+    let removed = false;
+
+    for (let i = 0, l = this.cues_.length; i &lt; l; i++) {
+      const cue = this.cues_[i];
+
+      if (cue === removeCue) {
+        this.cues_.splice(i, 1);
+        removed = true;
+      }
+    }
+
+    if (removed) {
+      this.cues.setCues_(this.cues_);
+    }
+  }
+}
+
+/**
+ * cuechange - One or more cues in the track have become active or stopped being active.
+ */
+TextTrack.prototype.allowedEvents_ = {
+  cuechange: 'cuechange'
+};
+
+export default TextTrack;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +463,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

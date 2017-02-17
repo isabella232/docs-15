@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: plugins | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,208 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>plugins</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
+        <article class="readme">
+            <h1>Video.js Plugins</h1><p>One of the great strengths of Video.js is its ecosystem of plugins that allow authors from all over the world to share their video player customizations. This includes everything from the simplest UI tweaks to new <a href="tech.md">playback technologies and source handlers</a>!</p>
+<p>Because we view plugins as such an important part of Video.js, the organization is committed to maintaining a robust set of tools for plugin authorship:</p>
+<ul>
+<li><p><a href="https://github.com/videojs/generator-videojs-plugin">generator-videojs-plugin</a></p>
+<p>A <a href="http://yeoman.io">Yeoman</a> generator for scaffolding a Video.js plugin project. Additionally, it offers a set of <a href="https://github.com/videojs/generator-videojs-plugin/blob/master/docs/standards.md">conventions for plugin authorship</a> that, if followed, make authorship, contribution, and usage consistent and predictable.</p>
+<p>In short, the generator sets up plugin authors to focus on writing their plugin - not messing with tools.</p>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
+<li><p><a href="https://github.com/videojs/spellbook">videojs-spellbook</a></p>
+<p>As of version 3, the plugin generator includes a new dependency: <a href="https://github.com/videojs/spellbook">videojs-spellbook</a>. Spellbook is a kitchen sink plugin development tool: it builds plugins, creates tags, runs a development server, and more.</p>
+<p>The benefit of Spellbook is that you can run the generator <em>once</em> and receive updates and bugfixes in Spellbook without having to run the generator again and deal with Yeoman conflicts and other headaches.</p>
+<p>As long as your plugin project follows the <a href="https://github.com/videojs/generator-videojs-plugin/blob/master/docs/standards.md">conventions</a>, Spellbook should work on it!</p>
 </li>
 </ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
+<h2>Writing a Basic Plugin</h2><p>If you've written a Video.js plugin before, the basic plugin concept should be familiar. It's similar to a jQuery plugin in that the core idea is that you're adding a method to the player.</p>
+<h3>Write a JavaScript Function</h3><p>A basic plugin is a plain JavaScript function:</p>
+<pre class="prettyprint source lang-js"><code>function examplePlugin(options) {
+
+  if (options.customClass) {
+    this.addClass(options.customClass);
+  }
+
+  this.on('playing', function() {
+    videojs.log('playback began!');
+  });
+}</code></pre><p>By convention, plugins are passed an <code>options</code> object; however, you can realistically accept whatever arguments you want. This example plugin will add a custom class (whatever is passed in as <code>options.customClass</code>) and, whenever playback begins, it will log a message to the browser console.</p>
+<blockquote>
+<p><strong>Note:</strong> The value of <code>this</code> in the plugin function is the player instance; so, you have access to <a href="http://docs.videojs.com/docs/api/player.html">its complete API</a>.</p>
+</blockquote>
+<h3>Register a Basic Plugin</h3><p>Now that we have a function that does something with a player, all that's left is to register the plugin with Video.js:</p>
+<pre class="prettyprint source lang-js"><code>videojs.registerPlugin('examplePlugin', examplePlugin);</code></pre><p>After that, any player will automatically have an <code>examplePlugin</code> method on its prototype!</p>
+<blockquote>
+<p><strong>Note:</strong> The only stipulation with the name of the plugin is that it cannot conflict with any existing plugin or player method.</p>
+</blockquote>
+<h2>Writing an Advanced Plugin</h2><p>Video.js 6 introduces advanced plugins: these are plugins that share a similar API with basic plugins, but are class-based and offer a range of extra features out of the box.</p>
+<p>While reading the following sections, you may want to refer to the <a href="http://docs.videojs.com/docs/api/plugin.html">Plugin API docs</a> for more detail.</p>
+<h3>Write a JavaScript Class/Constructor</h3><p>If you're familiar with creating <a href="components.md">components</a>, this process is similar. An advanced plugin starts with a JavaScript class (a.k.a. a constructor function).</p>
+<p>If you're using ES6 already, you can use that syntax with your transpiler/language of choice (Babel, TypeScript, etc):</p>
+<pre class="prettyprint source lang-js"><code>const Plugin = videojs.getPlugin('plugin');
+
+class ExamplePlugin extends Plugin {
+
+  constructor(player, options) {
+    super(player, options);
+
+    if (options.customClass) {
+      player.addClass(options.customClass);
+    }
+
+    player.on('playing', function() {
+      videojs.log('playback began!');
+    });
+  }
+}</code></pre><p>Or with ES5:</p>
+<pre class="prettyprint source lang-js"><code>var Plugin = videojs.getPlugin('plugin');
+
+var ExamplePlugin = videojs.extend(Plugin, {
+
+  constructor: function(player, options) {
+    Plugin.call(this, player, options);
+
+    if (options.customClass) {
+      player.addClass(options.customClass);
+    }
+
+    player.on('playing', function() {
+      videojs.log('playback began!');
+    });
+  }
+});</code></pre><p>For now, this example advanced plugin does the exact same thing as the basic plugin described above - not to worry, we will make it more interesting as we continue!</p>
+<h3>Register a Advanced Plugin</h3><p>The registration process for advanced plugins is identical to <a href="#register-a-basic-plugin">the process for basic plugins</a>.</p>
+<pre class="prettyprint source lang-js"><code>videojs.registerPlugin('examplePlugin', ExamplePlugin);</code></pre><blockquote>
+<p><strong>Note:</strong> Because ES6 classes are syntactic sugar on top of existing constructor function and prototype architecture in JavaScript, in all cases <code>registerPlugin</code>'s second argument is a function.</p>
+</blockquote>
+<h3>Key Differences from Basic Plugins</h3><p>Advanced plugins have two key differences from basic plugins that are important to understand before describing their advanced features.</p>
+<h4>The Value of <code>this</code></h4><p>With basic plugins, the value of <code>this</code> in the plugin function will be the <em>player</em>.</p>
+<p>With advanced plugins, the value of <code>this</code> is the <em>instance of the plugin class</em>. The player is passed to the plugin constructor as its first argument (and is automatically applied to the plugin instance as the <code>player</code> property) and any further arguments are passed after that.</p>
+<h4>The Player Plugin Name Property</h4><p>Both basic plugins and advanced plugins are set up by calling a method on a player with a name matching the plugin (e.g., <code>player.examplePlugin()</code>).</p>
+<p>However, with advanced plugins, this method acts like a factory function and it is <em>replaced</em> for the current player by a new function which returns the plugin instance:</p>
+<pre class="prettyprint source lang-js"><code>// `examplePlugin` has not been called, so it is a factory function.
+player.examplePlugin();
+
+// `examplePlugin` is now a function that returns the same instance of
+// `ExamplePlugin` that was generated by the previous call.
+player.examplePlugin().someMethodName();</code></pre><p>With basic plugins, the method does not change - it is always the same function. It is up to the authors of basic plugins to deal with multiple calls to their plugin function.</p>
+<h3>Features of Advanced Plugins</h3><p>Up to this point, our example advanced plugin is functionally identical to our example basic plugin. However, advanced plugins bring with them a great deal of benefit that is not built into basic plugins.</p>
+<h4>Events</h4><p>Like components, advanced plugins offer an implementation of events. This includes:</p>
+<ul>
+<li><p>The ability to listen for events on the plugin instance using <code>on</code> or <code>one</code>:</p>
+<pre class="prettyprint source lang-js"><code>player.examplePlugin().on('example-event', function() {
+  videojs.log('example plugin received an example-event');
+});</code></pre></li>
+<li><p>The ability to <code>trigger</code> custom events on a plugin instance:</p>
+<pre class="prettyprint source lang-js"><code>player.examplePlugin().trigger('example-event');</code></pre></li>
+<li><p>The ability to stop listening to custom events on a plugin instance using <code>off</code>:</p>
+<pre class="prettyprint source lang-js"><code>player.examplePlugin().off('example-event');</code></pre></li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<p>By offering a built-in events system, advanced plugins offer a wider range of options for code structure with a pattern familiar to most web developers.</p>
+<h4>Statefulness</h4><p>A new concept introduced for advanced plugins is <em>statefulness</em>. This is similar to React components' <code>state</code> property and <code>setState</code> method.</p>
+<p>Advanced plugin instances each have a <code>state</code> property, which is a plain JavaScript object - it can contain any keys and values the plugin author wants.</p>
+<p>A default <code>state</code> can be provided by adding a static property to a plugin constructor:</p>
+<pre class="prettyprint source lang-js"><code>ExamplePlugin.defaultState = {
+  customClass: 'default-custom-class'
+};</code></pre><p>When the <code>state</code> is updated via the <code>setState</code> method, the plugin instance fires a <code>&quot;statechanged&quot;</code> event, but <em>only if something changed!</em> This event can be used as a signal to update the DOM or perform some other action. The event object passed to listeners for this event includes, an object describing the changes that occurred on the <code>state</code> property:</p>
+<pre class="prettyprint source lang-js"><code>player.examplePlugin().on('statechanged', function(e) {
+  if (e.changes && e.changes.customClass) {
+    this.player
+      .removeClass(e.changes.customClass.from)
+      .addClass(e.changes.customClass.to);
+  }
+});
 
+player.examplePlugin().setState({customClass: 'another-custom-class'});</code></pre><h4>Lifecycle</h4><p>Like components, advanced plugins have a lifecycle. They can be created with their factory function and they can be destroyed using their <code>dispose</code> method:</p>
+<pre class="prettyprint source lang-js"><code>// set up a example plugin instance
+player.examplePlugin();
 
+// dispose of it anytime thereafter
+player.examplePlugin().dispose();</code></pre><p>The <code>dispose</code> method has several effects:</p>
+<ul>
+<li>Triggers a <code>&quot;dispose&quot;</code> event on the plugin instance.</li>
+<li>Cleans up all event listeners on the plugin instance, which helps avoid errors caused by events being triggered after an object is cleaned up.</li>
+<li>Removes plugin state and references to the player to avoid memory leaks.</li>
+<li>Reverts the player's named property (e.g. <code>player.examplePlugin</code>) <em>back</em> to the original factory function, so the plugin can be set up again.</li>
+</ul>
+<p>In addition, if the player is disposed, the disposal of all its advanced plugin instances will be triggered as well.</p>
+<h3>Advanced Example Advanced Plugin</h3><p>What follows is a complete ES6 advanced plugin that logs a custom message when the player's state changes between playing and paused. It uses all the described advanced features:</p>
+<pre class="prettyprint source lang-js"><code>import videojs from 'video.js';
 
+const Plugin = videojs.getPlugin('plugin');
+
+class Advanced extends Plugin {
+
+  constructor(player, options) {
+    super(player, options);
+
+    // Whenever the player emits a playing or paused event, we update the
+    // state if necessary.
+    this.on(player, ['playing', 'paused'], this.updateState);
+    this.on('statechanged', this.logState);
+  }
+
+  dispose() {
+    super.dispose();
+    videojs.log('the advanced plugin is being disposed');
+  }
+
+  updateState() {
+    this.setState({playing: !player.paused()});
+  }
+
+  logState(changed) {
+    videojs.log(`the player is now ${this.state.playing ? 'playing' : 'paused'}`);
+  }
+}
+
+videojs.registerPlugin('advanced', Advanced);
+
+const player = videojs('example-player');
+
+player.advanced();
+
+// This will begin playback, which will trigger a &quot;playing&quot; event, which will
+// update the state of the plugin, which will cause a message to be logged.
+player.play();
+
+// This will pause playback, which will trigger a &quot;paused&quot; event, which will
+// update the state of the plugin, which will cause a message to be logged.
+player.pause();
+
+player.advanced().dispose();
+
+// This will begin playback, but the plugin has been disposed, so it will not
+// log any messages.
+player.play();</code></pre><p>This example may be a bit pointless in reality, but it demonstrates the sort of flexibility offered by advanced plugins over basic plugins.</p>
+<h2>Setting up a Plugin</h2><p>There are two ways to set up (or initialize) a plugin on a player. Both ways work identically for both basic and advanced plugins.</p>
+<p>The first way is during creation of the player. Using the <code>plugins</code> option, a plugin can be automatically set up on a player:</p>
+<pre class="prettyprint source lang-js"><code>videojs('example-player', {
+  plugins: {
+    examplePlugin: {
+      customClass: 'example-class'
+    }
+  }
+});</code></pre><p>Otherwise, a plugin can be manually set up:</p>
+<pre class="prettyprint source lang-js"><code>var player = videojs('example-player');
+player.examplePlugin({customClass: 'example-class'});</code></pre><p>These two methods are functionally identical - use whichever you prefer!</p>
+<h2>References</h2><ul>
+<li><a href="http://docs.videojs.com/docs/api/player.html">Player API</a></li>
+<li><a href="http://docs.videojs.com/docs/api/plugin.html">Plugin API</a></li>
+<li><a href="https://github.com/videojs/generator-videojs-plugin">Plugin Generator</a></li>
+<li><a href="https://github.com/videojs/generator-videojs-plugin/blob/master/docs/standards.md">Plugin Conventions</a></li>
+</ul>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +271,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

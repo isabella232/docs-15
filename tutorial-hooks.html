@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: hooks | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,120 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>hooks</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
+        <article class="readme">
+            <h1>Hooks</h1><p>Hooks exist so that users can &quot;hook&quot; on to certain video.js player lifecycle</p>
 <h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#current-hooks">Current Hooks</a><ul>
+<li><a href="#beforesetup">beforesetup</a></li>
+<li><a href="#setup">setup</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#adding">Adding</a></li>
+<li><a href="#getting">Getting</a></li>
+<li><a href="#removing">Removing</a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
+<h2>Current Hooks</h2><p>Currently, the following hooks are avialable:</p>
+<h3>beforesetup</h3><p><code>beforesetup</code> is called just before the player is created. This allows:</p>
+<ul>
+<li>modification of the options passed to the video.js function (<code>videojs('some-id, options)</code>)</li>
+<li>modification of the dom video element that will be used for the player</li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<p><code>beforesetup</code> hook functions should:</p>
+<ul>
+<li>take two arguments<ol>
+<li>videoEl: dom video element that video.js is going to use to create a player</li>
+<li>options: options that video.js was intialized with and will later pass to the player during creation</li>
+</ol>
+</li>
+<li>return options that will merge and override options that video.js with intialized with</li>
+</ul>
+<p>Example: adding beforesetup hook</p>
+<pre class="prettyprint source lang-js"><code>var beforeSetup = function(videoEl, options) {
+  // videoEl.id will be some-id here, since that is what video.js
+  // was created with
 
+  videoEl.className += ' some-super-class';
 
+  // autoplay will be true here, since we passed in as such
+  (options.autoplay) {
+    options.autoplay = false
+  }
 
+  // options that are returned here will be merged with old options
+  // in this example options will now be
+  // {autoplay: false, controls: true}
+  return options;
+};
+
+videojs.hook('beforesetup', beforeSetup);
+videojs('some-id', {autoplay: true, controls: true});</code></pre><h3>setup</h3><p><code>setup</code> is called just after the player is created. This allows:</p>
+<ul>
+<li>plugin or custom functionalify to intialize on the player</li>
+<li>changes to the player object itself</li>
+</ul>
+<p><code>setup</code> hook functions:</p>
+<ul>
+<li>Take one argument<ul>
+<li>player: the player that video.js created</li>
+</ul>
+</li>
+<li>Don't have to return anything</li>
+</ul>
+<p>Example: adding setup hook</p>
+<pre class="prettyprint source lang-js"><code>    var setup = function(player) {
+        // initialize the foo plugin
+        player.foo();
+    };
+    var foo = function() {};
+
+    videojs.plugin('foo', foo);
+    videojs.hook('setup', setup);
+    var player = videojs('some-id', {autoplay: true, controls: true});</code></pre><h2>Usage</h2><h3>Adding</h3><p>In order to use hooks you must first include video.js in the page or script that you are using. Then you add hooks using <code>videojs.hook(&lt;name&gt;, function)</code> before running the <code>videojs()</code> function.</p>
+<p>Example: adding hooks</p>
+<pre class="prettyprint source lang-js"><code>videojs.hook('beforesetup', function(videoEl, options) {
+  // videoEl will be the element with id=vid1
+  // options will contain {autoplay: false}
+});
+videojs.hook('setup', function(player) {
+  // player will be the same player that is defined below
+  // as `var player`
+});
+
+var player = videojs('vid1', {autoplay: false});</code></pre><p>After adding your hooks they will automatically be run at the correct time in the video.js lifecycle.</p>
+<h3>Getting</h3><p>To access the array of hooks that currently exists and will be run on the video.js object you can use the <code>videojs.hooks</code> function.</p>
+<p>Example: getting all hooks attached to video.js</p>
+<pre class="prettyprint source lang-js"><code>var beforeSetupHooks = videojs.hooks('beforesetup');
+var setupHooks = videojs.hooks('setup');</code></pre><h3>Removing</h3><p>To stop hooks from being executed during the video.js lifecycle you will remove them using <code>videojs.removeHook</code>.</p>
+<p>Example: remove a hook that was defined by you</p>
+<pre class="prettyprint source lang-js"><code>var beforeSetup = function(videoEl, options) {};
+
+// add the hook
+videojs.hook('beforesetup', beforeSetup);
+
+// remove that same hook
+videojs.removeHook('beforesetup', beforeSetup);</code></pre><p>You can also use <code>videojs.hooks</code> in conjunction with <code>videojs.removeHook</code> but it may have unexpected results if used during an asynchronous callbacks as other plugins/functionality may have added hooks.</p>
+<p>Example: using <code>videojs.hooks</code> and <code>videojs.removeHook</code> to remove a hook</p>
+<pre class="prettyprint source lang-js"><code>// add the hook
+videojs.hook('setup', function(videoEl, options) {});
+
+var setupHooks = videojs.hooks('setup');
+
+// remove the hook you just added
+videojs.removeHook('setup', setupHooks[setupHooks.length - 1]);</code></pre>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +183,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

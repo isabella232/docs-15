@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: audio-tracks | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,137 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>audio-tracks</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
+        <article class="readme">
+            <h1>Audio Tracks</h1><p>Audio tracks are a feature of HTML5 video for providing alternate audio track selections
+to the user, so that a track other than the main track can be played. Video.js offers a
+cross-browser implementation of audio tracks.</p>
 <h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#caveats">Caveats</a></li>
+<li><a href="#working-with-audio-tracks">Working with Audio Tracks</a><ul>
+<li><a href="#add-an-audio-track-to-the-player">Add an Audio Track to the Player</a></li>
+<li><a href="#listen-for-a-video-track-becoming-enabled">Listen for a Video Track Becoming Enabled</a></li>
+<li><a href="#removing-an-audio-track-from-the-player">Removing an Audio Track from the Player</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#api">API</a><ul>
+<li><a href="#videojsaudiotrack">videojs.AudioTrack</a><ul>
+<li><a href="#id">id</a></li>
+<li><a href="#kind">kind</a></li>
+<li><a href="#label">label</a></li>
+<li><a href="#language">language</a></li>
+<li><a href="#enabled">enabled</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#api-docs">API Docs</a></li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<h2>Caveats</h2><ul>
+<li>It is not possible to add audio tracks through HTML like you can with text tracks.
+They must be added programmatically.</li>
+<li>Video.js only stores track representations. Switching audio tracks for playback is
+<em>not handled by Video.js</em> and must be handled elsewhere - for example,
+<a href="http://github.com/videojs/videojs-contrib-hls">videojs-contrib-hls</a> handles switching
+audio tracks to support track selection through the UI.</li>
+</ul>
+<h2>Working with Audio Tracks</h2><h3>Add an Audio Track to the Player</h3><pre class="prettyprint source lang-js"><code>// Create a player.
+var player = videojs('my-player');
 
+// Create a track object.
+var track = new videojs.AudioTrack({
+  id: 'my-spanish-audio-track',
+  kind: 'translation',
+  label: 'Spanish',
+  language: 'es'
+});
 
+// Add the track to the player's audio track list.
+player.audioTracks().addTrack(track);</code></pre><h3>Listen for a Video Track Becoming Enabled</h3><p>When a track is enabled or disabled on an <code>AudioTrackList</code>, a <code>change</code> event will be
+fired. You can listen for that event and do something with it.</p>
+<blockquote>
+<p>NOTE: The initial <code>AudioTrack</code> selection (usually the main track that is selected)
+      should not fire a <code>change</code> event.</p>
+</blockquote>
+<pre class="prettyprint source lang-js"><code>// Get the current player's AudioTrackList object.
+var audioTrackList = player.audioTracks();
 
+// Listen to the &quot;change&quot; event.
+audioTrackList.addEventListener('change', function() {
+
+  // Log the currently enabled AudioTrack label.
+  for (var i = 0; i &lt; audioTrackList.length; i++) {
+    var track = audioTrackList[i];
+
+    if (track.enabled) {
+      videojs.log(track.label);
+      return;
+    }
+  }
+});</code></pre><h3>Removing an Audio Track from the Player</h3><p>Assuming a player already exists and has an audio track that you want to remove, you
+might do something like the following:</p>
+<pre class="prettyprint source lang-js"><code>// Get the track we created in an earlier example.
+var track = player.audioTracks().getTrackById('my-spanish-audio-track');
+
+// Remove it from the audio track list.
+player.audioTracks().removeTrack(track);</code></pre><h2>API</h2><p>For more complete information, refer to the
+<a href="http://docs.videojs.com/docs/api/index.html">Video.js API docs</a>, specifically:</p>
+<ul>
+<li><code>Player#audioTracks</code></li>
+<li><code>AudioTrackList</code></li>
+<li><code>AudioTrack</code></li>
+</ul>
+<h3><code>videojs.AudioTrack</code></h3><p>This class is based on <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#audiotrack">the <code>AudioTrack</code> standard</a> and can be used to
+create new audio track objects.</p>
+<p>Each property below is available as an option to the <code>AudioTrack</code> constructor.</p>
+<h4><code>id</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-audiotrack-id">standard definition</a></p>
+</blockquote>
+<p>A unique identifier for this track. Video.js will generate one if not given.</p>
+<h4><code>kind</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-audiotrack-kind">standard definition</a></p>
+</blockquote>
+<p>Video.js supports standard <code>kind</code> values for <code>AudioTracks</code>:</p>
+<ul>
+<li><code>&quot;alternative&quot;</code>: A possible alternative to the main track.</li>
+<li><code>&quot;descriptions&quot;</code>: An audio description of a video track.</li>
+<li><code>&quot;main&quot;</code>: The primary audio track for this video.</li>
+<li><code>&quot;main-desc&quot;</code>: The primary audio track, mixed with audio descriptions.</li>
+<li><code>&quot;translation&quot;</code>: A translated version of the main audio track.</li>
+<li><code>&quot;commentary&quot;</code>: Commentary on the primary audio track, e.g. a director's commentary.</li>
+<li><code>&quot;&quot;</code> (default): No explicit kind, or the kind given by the track's metadata is not
+recognized by the user agent.</li>
+</ul>
+<h4><code>label</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-audiotrack-label">standard definition</a></p>
+</blockquote>
+<p>The label for the track that will be shown to the user. For example, in a menu that lists
+the different languages available as alternate audio tracks.</p>
+<h4><code>language</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-audiotrack-language">standard definition</a></p>
+</blockquote>
+<p>The valid <a href="https://tools.ietf.org/html/bcp47">BCP 47</a> code for the language of the audio
+track, e.g. <code>&quot;en&quot;</code> for English or <code>&quot;es&quot;</code> for Spanish.</p>
+<p>For supported language translations, please see the <a href="https://github.com/videojs/video.js/tree/master/lang">languages folder (/lang)</a>
+located in the Video.js root and refer to the <a href="languages.md">languages guide</a> for more
+information on languages in Video.js.</p>
+<h4><code>enabled</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-audiotrack-enabled">standard definition</a></p>
+</blockquote>
+<p>Whether or not this track should be playing.</p>
+<p>In Video.js, we only allow one track to be enabled at a time; so, if you enable more
+than one, the last one to be enabled will end up being the only one. While the spec
+allows for more than one track to be enabled, Safari and most implementations only allow
+one audio track to be enabled at a time.</p>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +200,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

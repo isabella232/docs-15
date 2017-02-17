@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Tutorial: video-tracks | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -54,68 +54,120 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>video-tracks</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
+        <article class="readme">
+            <h1>Video Tracks</h1><blockquote>
+<p><strong>Note:</strong> While video tracks <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#videotrack">are a standard</a>, there are no compatible implementations at this time. This is an experimental technology!</p>
+</blockquote>
+<p>Video tracks are a feature of HTML5 video for providing alternate video tracks to the user, so they can change the type of video they want to watch. Video.js offers a cross-browser implementation of video tracks.</p>
 <h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#caveats">Caveats</a></li>
+<li><a href="#working-with-video-tracks">Working with Video Tracks</a><ul>
+<li><a href="#add-a-video-track-to-the-player">Add a Video Track to the Player</a></li>
+<li><a href="#listen-for-a-video-track-becoming-enabled">Listen for a Video Track Becoming Enabled</a></li>
+<li><a href="#removing-an-video-track-from-the-player">Removing an Video Track from the Player</a></li>
 </ul>
 </li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
+<li><a href="#api">API</a><ul>
+<li><a href="#videojsvideotrack">videojs.VideoTrack</a><ul>
+<li><a href="#id">id</a></li>
+<li><a href="#kind">kind</a></li>
+<li><a href="#label">label</a></li>
+<li><a href="#language">language</a></li>
+<li><a href="#selected">selected</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#api-docs">API Docs</a></li>
 </ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
-    </section>
+<h2>Caveats</h2><ul>
+<li>It is not possible to add video tracks through HTML like you can with text tracks. They must be added programmatically.</li>
+<li>Video.js only stores track representations. Switching video tracks for playback is <em>not handled by Video.js</em> and must be handled elsewhere.</li>
+</ul>
+<h2>Working with Video Tracks</h2><h3>Add a Video Track to the Player</h3><pre class="prettyprint source lang-js"><code>// Create a player.
+var player = videojs('my-player');
 
+// Create a track object.
+var track = new videojs.VideoTrack({
+  id: 'my-alternate-video-track',
+  kind: 'commentary',
+  label: 'Director\'s Commentary',
+  language: 'en'
+});
 
+// Add the track to the player's video track list.
+player.videoTracks().addTrack(track);</code></pre><h3>Listen for a Video Track Becoming Enabled</h3><p>When a track is enabled or disabled on an <code>VideoTrackList</code>, a <code>change</code> event will be fired. You can listen for that event and do something with it.</p>
+<blockquote>
+<p>NOTE: The initial <code>VideoTrack</code> selection (usually the main track that is selected) should not fire a <code>change</code> event.</p>
+</blockquote>
+<pre class="prettyprint source lang-js"><code>// Get the current player's VideoTrackList object.
+var videoTrackList = player.videoTracks();
 
+// Listen to the &quot;change&quot; event.
+videoTrackList.addEventListener('change', function() {
+
+  // Log the currently enabled VideoTrack label.
+  for (var i = 0; i &lt; videoTrackList.length; i++) {
+    var track = videoTrackList[i];
+
+    if (track.enabled) {
+      videojs.log(track.label);
+      return;
+    }
+  }
+});</code></pre><h3>Removing an Video Track from the Player</h3><p>Assuming a player already exists and has an video track that you want to remove, you might do something like the following:</p>
+<pre class="prettyprint source lang-js"><code>// Get the track we created in an earlier example.
+var track = player.videoTracks().getTrackById('my-alternate-video-track');
+
+// Remove it from the video track list.
+player.videoTracks().removeTrack(track);</code></pre><h2>API</h2><p>For more complete information, refer to the <a href="http://docs.videojs.com/docs/api/index.html">Video.js API docs</a>, specifically:</p>
+<ul>
+<li><code>Player#videoTracks</code></li>
+<li><code>VideoTrackList</code></li>
+<li><code>VideoTrack</code></li>
+</ul>
+<h3><code>videojs.VideoTrack</code></h3><p>This class is based on <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#videotrack">the <code>VideoTrack</code> standard</a> and can be used to create new video track objects.</p>
+<p>Each property below is available as an option to the <code>VideoTrack</code> constructor.</p>
+<h4><code>id</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-videotrack-id">standard definition</a></p>
+</blockquote>
+<p>A unique identifier for this track. Video.js will generate one if not given.</p>
+<h4><code>kind</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-videotrack-kind">standard definition</a></p>
+</blockquote>
+<p>Video.js supports standard <code>kind</code> values for <code>VideoTracks</code>:</p>
+<ul>
+<li><code>&quot;alternative&quot;</code>: A possible alternative to the main track.</li>
+<li><code>&quot;captions&quot;</code>: The main video track with burned in captions</li>
+<li><code>&quot;main&quot;</code>: The main video track.</li>
+<li><code>&quot;sign&quot;</code>: The main video track with added sign language overlay.</li>
+<li><code>&quot;subtitles&quot;</code>: The main video track with burned in subtitles.</li>
+<li><code>&quot;commentary&quot;</code>: The main video track with burned in commentary.</li>
+<li><code>&quot;&quot;</code> (default): No explicit kind, or the kind given by the track's metadata is not recognized by the user agent.</li>
+</ul>
+<h4><code>label</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-videotrack-label">standard definition</a></p>
+</blockquote>
+<p>The label for the track that will be shown to the user. For example, in a menu that lists the different captions available as alternate video tracks.</p>
+<h4><code>language</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-videotrack-language">standard definition</a></p>
+</blockquote>
+<p>The valid <a href="https://tools.ietf.org/html/bcp47">BCP 47</a> code for the language of the video track, e.g. <code>&quot;en&quot;</code> for English or <code>&quot;es&quot;</code> for Spanish.</p>
+<p>For supported language translations, please see the <a href="https://github.com/videojs/video.js/tree/master/lang">languages folder (/lang)</a> folder located in the Video.js root and refer to the <a href="./languages.md">languages guide</a> for more information on languages in Video.js.</p>
+<h4><code>selected</code></h4><blockquote>
+<p><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#dom-videotrack-selected">standard definition</a></p>
+</blockquote>
+<p>Whether or not this track should be playing. Only one video track may be selected at a time.</p>
+        </article>
+    
+</section>
 
 
 
@@ -131,13 +183,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

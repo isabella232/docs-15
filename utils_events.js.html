@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Video.js Documentation</title>
+    <title>Source: utils/events.js | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -57,64 +59,450 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1><a href="http://videojs.com">Video.js</a> Documentation</h1><p>There are two categories of docs: <a href="guides">Guides</a> and <a href="http://docs.videojs.com/docs/api/index.html">API docs</a>.</p>
-<p>Guides explain general topics and use cases (e.g. setup). API docs are automatically generated from the codebase and give specific details about functions, properties, and events.</p>
-<h2>Table of Contents</h2><ul>
-<li><a href="#resolving-issues">Resolving Issues</a><ul>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li><a href="#guides">Guides</a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#player-workflows">Player Workflows</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#tracks">Tracks</a></li>
-</ul>
-</li>
-<li><a href="#customizing">Customizing</a><ul>
-<li><a href="#skins">Skins</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#components">Components</a></li>
-<li><a href="#tech">Tech</a></li>
-<li><a href="#languages">Languages</a></li>
-<li><a href="#hooks">Hooks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#api-docs">API Docs</a></li>
-</ul>
-<h2>Resolving Issues</h2><h3><a href="guides/faq.md">FAQ</a></h3><p>The frequently asked questions for video.js.</p>
-<h3><a href="guides/troubleshooting.md">Troubleshooting</a></h3><p>Troubleshooting help for video.js.</p>
-<h2><a href="guides">Guides</a></h2><h3>Getting Started</h3><h4><a href="guides/setup.md">Setup</a></h4><p>The setup guide covers all methods of setting up Video.js players.</p>
-<h4><a href="guides/player-workflows.md">Player Workflows</a></h4><p>After mastering the basics of setup move over to this guide for some more advanced player workflows.</p>
-<h4><a href="guides/options.md">Options</a></h4><p>There are a number of options that can be used to change how the player behaves, starting with the HTML5 media options like autoplay and preload, and expanding to Video.js specific options.</p>
-<h4><a href="guides/tracks.md">Tracks</a></h4><p>Tracks are used for displaying text information over a video, selecting different audio tracks for a video, or selecting different video tracks.</p>
-<h3>Customizing</h3><h4><a href="guides/skins.md">Skins</a></h4><p>You can change the look of the player across playback technologies just by editing a CSS file. The skins documentation gives you a intro to how the HTML and CSS of the default skin is put together. For a list of skins you can check the <a href="https://github.com/videojs/video.js/wiki/Skins">video.js wiki</a>.</p>
-<h4><a href="guides/plugins.md">Plugins</a></h4><p>You can package up interesting Video.js customizations and reuse them elsewhere. Find out how to build your own plugin or <a href="http://videojs.com/plugins">use one created by someone else</a>.</p>
-<h4><a href="guides/components.md">Components</a></h4><p>Video.js is built around a collection of components. These are the building blocks of the player UI.</p>
-<h4><a href="guides/tech.md">Tech</a></h4><p>A &quot;tech&quot; is the shorthand we're using to describe any video playback technology - be it HTML5 video, Flash, . Basically anything that has a unique API to audio or video. Additional playback technologies can be added relatively easily.</p>
-<h4><a href="guides/languages.md">Languages</a></h4><p>Video.js has multi-language support! Follow this guide to see how you can contribute to and use languages.</p>
-<h4><a href="guides/hooks.md">Hooks</a></h4><p>A &quot;hook&quot; is functionality that wants to do when videojs creates a player. Right now only <code>beforesetup</code> and <code>setup</code> are supported. See the guide for more information on that.</p>
-<h2><a href="http://docs.videojs.com/docs/api/index.html">API Docs</a></h2><p>You can refer to the <a href="http://docs.videojs.com/docs/api/index.html">full list of API docs</a>, but the most relevant API doc is for the <a href="http://docs.videojs.com/docs/api/player.html">Player</a>.</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file events.js. An Event System (John Resig - Secrets of a JS Ninja http://jsninja.com/)
+ * (Original book version wasn't completely usable, so fixed some things and made Closure Compiler compatible)
+ * This should work very similarly to jQuery's events, however it's based off the book version which isn't as
+ * robust as jquery's, so there's probably some differences.
+ *
+ * @module events
+ */
+
+import * as DomData from './dom-data';
+import * as Guid from './guid.js';
+import log from './log.js';
+import window from 'global/window';
+import document from 'global/document';
+
+/**
+ * Clean up the listener cache and dispatchers
+ *
+ * @param {Element|Object} elem
+ *        Element to clean up
+ *
+ * @param {string} type
+ *        Type of event to clean up
+ */
+function _cleanUpEvents(elem, type) {
+  const data = DomData.getData(elem);
+
+  // Remove the events of a particular type if there are none left
+  if (data.handlers[type].length === 0) {
+    delete data.handlers[type];
+    // data.handlers[type] = null;
+    // Setting to null was causing an error with data.handlers
+
+    // Remove the meta-handler from the element
+    if (elem.removeEventListener) {
+      elem.removeEventListener(type, data.dispatcher, false);
+    } else if (elem.detachEvent) {
+      elem.detachEvent('on' + type, data.dispatcher);
+    }
+  }
+
+  // Remove the events object if there are no types left
+  if (Object.getOwnPropertyNames(data.handlers).length &lt;= 0) {
+    delete data.handlers;
+    delete data.dispatcher;
+    delete data.disabled;
+  }
+
+  // Finally remove the element data if there is no data left
+  if (Object.getOwnPropertyNames(data).length === 0) {
+    DomData.removeData(elem);
+  }
+}
+
+/**
+ * Loops through an array of event types and calls the requested method for each type.
+ *
+ * @param {Function} fn
+ *        The event method we want to use.
+ *
+ * @param {Element|Object} elem
+ *        Element or object to bind listeners to
+ *
+ * @param {string} type
+ *        Type of event to bind to.
+ *
+ * @param {EventTarget~EventListener} callback
+ *        Event listener.
+ */
+function _handleMultipleEvents(fn, elem, types, callback) {
+  types.forEach(function(type) {
+    // Call the event method for each one of the types
+    fn(elem, type, callback);
+  });
+}
+
+/**
+ * Fix a native event to have standard property values
+ *
+ * @param {Object} event
+ *        Event object to fix.
+ *
+ * @return {Object}
+ *         Fixed event object.
+ */
+export function fixEvent(event) {
+
+  function returnTrue() {
+    return true;
+  }
+
+  function returnFalse() {
+    return false;
+  }
+
+  // Test if fixing up is needed
+  // Used to check if !event.stopPropagation instead of isPropagationStopped
+  // But native events return true for stopPropagation, but don't have
+  // other expected methods like isPropagationStopped. Seems to be a problem
+  // with the Javascript Ninja code. So we're just overriding all events now.
+  if (!event || !event.isPropagationStopped) {
+    const old = event || window.event;
+
+    event = {};
+    // Clone the old object so that we can modify the values event = {};
+    // IE8 Doesn't like when you mess with native event properties
+    // Firefox returns false for event.hasOwnProperty('type') and other props
+    //  which makes copying more difficult.
+    // TODO: Probably best to create a whitelist of event props
+    for (const key in old) {
+      // Safari 6.0.3 warns you if you try to copy deprecated layerX/Y
+      // Chrome warns you if you try to copy deprecated keyboardEvent.keyLocation
+      // and webkitMovementX/Y
+      if (key !== 'layerX' &amp;&amp; key !== 'layerY' &amp;&amp; key !== 'keyLocation' &amp;&amp;
+          key !== 'webkitMovementX' &amp;&amp; key !== 'webkitMovementY') {
+        // Chrome 32+ warns if you try to copy deprecated returnValue, but
+        // we still want to if preventDefault isn't supported (IE8).
+        if (!(key === 'returnValue' &amp;&amp; old.preventDefault)) {
+          event[key] = old[key];
+        }
+      }
+    }
+
+    // The event occurred on this element
+    if (!event.target) {
+      event.target = event.srcElement || document;
+    }
+
+    // Handle which other element the event is related to
+    if (!event.relatedTarget) {
+      event.relatedTarget = event.fromElement === event.target ?
+        event.toElement :
+        event.fromElement;
+    }
+
+    // Stop the default browser action
+    event.preventDefault = function() {
+      if (old.preventDefault) {
+        old.preventDefault();
+      }
+      event.returnValue = false;
+      old.returnValue = false;
+      event.defaultPrevented = true;
+    };
+
+    event.defaultPrevented = false;
+
+    // Stop the event from bubbling
+    event.stopPropagation = function() {
+      if (old.stopPropagation) {
+        old.stopPropagation();
+      }
+      event.cancelBubble = true;
+      old.cancelBubble = true;
+      event.isPropagationStopped = returnTrue;
+    };
+
+    event.isPropagationStopped = returnFalse;
+
+    // Stop the event from bubbling and executing other handlers
+    event.stopImmediatePropagation = function() {
+      if (old.stopImmediatePropagation) {
+        old.stopImmediatePropagation();
+      }
+      event.isImmediatePropagationStopped = returnTrue;
+      event.stopPropagation();
+    };
+
+    event.isImmediatePropagationStopped = returnFalse;
+
+    // Handle mouse position
+    if (event.clientX !== null &amp;&amp; event.clientX !== undefined) {
+      const doc = document.documentElement;
+      const body = document.body;
+
+      event.pageX = event.clientX +
+        (doc &amp;&amp; doc.scrollLeft || body &amp;&amp; body.scrollLeft || 0) -
+        (doc &amp;&amp; doc.clientLeft || body &amp;&amp; body.clientLeft || 0);
+      event.pageY = event.clientY +
+        (doc &amp;&amp; doc.scrollTop || body &amp;&amp; body.scrollTop || 0) -
+        (doc &amp;&amp; doc.clientTop || body &amp;&amp; body.clientTop || 0);
+    }
+
+    // Handle key presses
+    event.which = event.charCode || event.keyCode;
+
+    // Fix button for mouse clicks:
+    // 0 == left; 1 == middle; 2 == right
+    if (event.button !== null &amp;&amp; event.button !== undefined) {
+
+      // The following is disabled because it does not pass videojs-standard
+      // and... yikes.
+      /* eslint-disable */
+      event.button = (event.button &amp; 1 ? 0 :
+        (event.button &amp; 4 ? 1 :
+          (event.button &amp; 2 ? 2 : 0)));
+      /* eslint-enable */
+    }
+  }
+
+  // Returns fixed-up instance
+  return event;
+}
+
+/**
+ * Add an event listener to element
+ * It stores the handler function in a separate cache object
+ * and adds a generic handler to the element's event,
+ * along with a unique id (guid) to the element.
+ *
+ * @param {Element|Object} elem
+ *        Element or object to bind listeners to
+ *
+ * @param {string|string[]} type
+ *        Type of event to bind to.
+ *
+ * @param {EventTarget~EventListener} fn
+ *        Event listener.
+ */
+export function on(elem, type, fn) {
+  if (Array.isArray(type)) {
+    return _handleMultipleEvents(on, elem, type, fn);
+  }
+
+  const data = DomData.getData(elem);
+
+  // We need a place to store all our handler data
+  if (!data.handlers) {
+    data.handlers = {};
+  }
+
+  if (!data.handlers[type]) {
+    data.handlers[type] = [];
+  }
+
+  if (!fn.guid) {
+    fn.guid = Guid.newGUID();
+  }
+
+  data.handlers[type].push(fn);
+
+  if (!data.dispatcher) {
+    data.disabled = false;
+
+    data.dispatcher = function(event, hash) {
+
+      if (data.disabled) {
+        return;
+      }
+
+      event = fixEvent(event);
+
+      const handlers = data.handlers[event.type];
+
+      if (handlers) {
+        // Copy handlers so if handlers are added/removed during the process it doesn't throw everything off.
+        const handlersCopy = handlers.slice(0);
+
+        for (let m = 0, n = handlersCopy.length; m &lt; n; m++) {
+          if (event.isImmediatePropagationStopped()) {
+            break;
+          } else {
+            try {
+              handlersCopy[m].call(elem, event, hash);
+            } catch (e) {
+              log.error(e);
+            }
+          }
+        }
+      }
+    };
+  }
+
+  if (data.handlers[type].length === 1) {
+    if (elem.addEventListener) {
+      elem.addEventListener(type, data.dispatcher, false);
+    } else if (elem.attachEvent) {
+      elem.attachEvent('on' + type, data.dispatcher);
+    }
+  }
+}
+
+/**
+ * Removes event listeners from an element
+ *
+ * @param {Element|Object} elem
+ *        Object to remove listeners from.
+ *
+ * @param {string|string[]} [type]
+ *        Type of listener to remove. Don't include to remove all events from element.
+ *
+ * @param {EventTarget~EventListener} [fn]
+ *        Specific listener to remove. Don't include to remove listeners for an event
+ *        type.
+ */
+export function off(elem, type, fn) {
+  // Don't want to add a cache object through getElData if not needed
+  if (!DomData.hasData(elem)) {
+    return;
+  }
+
+  const data = DomData.getData(elem);
+
+  // If no events exist, nothing to unbind
+  if (!data.handlers) {
+    return;
+  }
+
+  if (Array.isArray(type)) {
+    return _handleMultipleEvents(off, elem, type, fn);
+  }
+
+  // Utility function
+  const removeType = function(t) {
+    data.handlers[t] = [];
+    _cleanUpEvents(elem, t);
+  };
+
+  // Are we removing all bound events?
+  if (!type) {
+    for (const t in data.handlers) {
+      removeType(t);
+    }
+    return;
+  }
+
+  const handlers = data.handlers[type];
+
+  // If no handlers exist, nothing to unbind
+  if (!handlers) {
+    return;
+  }
+
+  // If no listener was provided, remove all listeners for type
+  if (!fn) {
+    removeType(type);
+    return;
+  }
+
+  // We're only removing a single handler
+  if (fn.guid) {
+    for (let n = 0; n &lt; handlers.length; n++) {
+      if (handlers[n].guid === fn.guid) {
+        handlers.splice(n--, 1);
+      }
+    }
+  }
+
+  _cleanUpEvents(elem, type);
+}
+
+/**
+ * Trigger an event for an element
+ *
+ * @param {Element|Object} elem
+ *        Element to trigger an event on
+ *
+ * @param {EventTarget~Event|string} event
+ *        A string (the type) or an event object with a type attribute
+ *
+ * @param {Object} [hash]
+ *        data hash to pass along with the event
+ *
+ * @return {boolean|undefined}
+ *         - Returns the opposite of `defaultPrevented` if default was prevented
+ *         - Otherwise returns undefined
+ */
+export function trigger(elem, event, hash) {
+  // Fetches element data and a reference to the parent (for bubbling).
+  // Don't want to add a data object to cache for every parent,
+  // so checking hasElData first.
+  const elemData = (DomData.hasData(elem)) ? DomData.getData(elem) : {};
+  const parent = elem.parentNode || elem.ownerDocument;
+      // type = event.type || event,
+      // handler;
+
+  // If an event name was passed as a string, creates an event out of it
+  if (typeof event === 'string') {
+    event = {type: event, target: elem};
+  }
+  // Normalizes the event properties.
+  event = fixEvent(event);
+
+  // If the passed element has a dispatcher, executes the established handlers.
+  if (elemData.dispatcher) {
+    elemData.dispatcher.call(elem, event, hash);
+  }
+
+  // Unless explicitly stopped or the event does not bubble (e.g. media events)
+  // recursively calls this function to bubble the event up the DOM.
+  if (parent &amp;&amp; !event.isPropagationStopped() &amp;&amp; event.bubbles === true) {
+    trigger.call(null, parent, event, hash);
+
+  // If at the top of the DOM, triggers the default action unless disabled.
+  } else if (!parent &amp;&amp; !event.defaultPrevented) {
+    const targetData = DomData.getData(event.target);
+
+    // Checks if the target has a default action for this event.
+    if (event.target[event.type]) {
+      // Temporarily disables event dispatching on the target as we have already executed the handler.
+      targetData.disabled = true;
+      // Executes the default action.
+      if (typeof event.target[event.type] === 'function') {
+        event.target[event.type]();
+      }
+      // Re-enables event dispatching.
+      targetData.disabled = false;
+    }
+  }
+
+  // Inform the triggerer if the default was prevented by returning false
+  return !event.defaultPrevented;
+}
+
+/**
+ * Trigger a listener only once for an event
+ *
+ * @param {Element|Object} elem
+ *        Element or object to bind to.
+ *
+ * @param {string|string[]} type
+ *        Name/type of event
+ *
+ * @param {Event~EventListener} fn
+ *        Event Listener function
+ */
+export function one(elem, type, fn) {
+  if (Array.isArray(type)) {
+    return _handleMultipleEvents(one, elem, type, fn);
+  }
+  const func = function() {
+    off(elem, type, func);
+    fn.apply(this, arguments);
+  };
+
+  // copy the guid to the new function so it can removed using the original function's ID
+  func.guid = fn.guid = fn.guid || Guid.newGUID();
+  on(elem, type, func);
+}
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -131,7 +519,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:video.js_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 
