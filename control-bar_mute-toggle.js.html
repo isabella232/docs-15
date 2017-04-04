@@ -32,7 +32,7 @@
     <div class="title">
         <h1><a href="index.html" class="link">Video.js Documentation</a></h1>
         
-            <span class="version">v6.0.0-RC.5</span>
+            <span class="version">v6.0.0</span>
         
     </div>
     <div class="search-container" id="search-container">
@@ -120,7 +120,9 @@ class MuteToggle extends Button {
     const lastVolume = this.player_.lastVolume_();
 
     if (vol === 0) {
-      this.player_.volume(lastVolume);
+      const volumeToSet = lastVolume &lt; 0.1 ? 0.1 : lastVolume;
+
+      this.player_.volume(volumeToSet);
       this.player_.muted(false);
     } else {
       this.player_.muted(this.player_.muted() ? false : true);

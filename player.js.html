@@ -32,7 +32,7 @@
     <div class="title">
         <h1><a href="index.html" class="link">Video.js Documentation</a></h1>
         
-            <span class="version">v6.0.0-RC.5</span>
+            <span class="version">v6.0.0</span>
         
     </div>
     <div class="search-container" id="search-container">
@@ -1675,7 +1675,12 @@ class Player extends Component {
   play() {
     if (this.changingSrc_) {
       this.ready(function() {
-        this.techCall_('play');
+        const retval = this.techGet_('play');
+
+        // silence errors (unhandled promise from play)
+        if (retval !== undefined &amp;&amp; typeof retval.then === 'function') {
+          retval.then(null, (e) => {});
+        }
       });
 
     // Only calls the tech's play if we already have a src loaded

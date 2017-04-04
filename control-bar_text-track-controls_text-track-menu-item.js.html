@@ -32,7 +32,7 @@
     <div class="title">
         <h1><a href="index.html" class="link">Video.js Documentation</a></h1>
         
-            <span class="version">v6.0.0-RC.5</span>
+            <span class="version">v6.0.0</span>
         
     </div>
     <div class="search-container" id="search-container">
@@ -99,6 +99,7 @@ class TextTrackMenuItem extends MenuItem {
     this.track = track;
     const changeHandler = Fn.bind(this, this.handleTracksChange);
 
+    player.on(['loadstart', 'texttrackchange'], changeHandler);
     tracks.addEventListener('change', changeHandler);
     this.on('dispose', function() {
       tracks.removeEventListener('change', changeHandler);
