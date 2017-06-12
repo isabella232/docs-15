@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: tech/loader.js | Video.js Documentation</title>
+    <title>Tutorial: webpack | Video.js Documentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -56,81 +54,37 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
+        <h2>webpack</h2>
+    </header>
 
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @file loader.js
- */
-import Component from '../component.js';
-import Tech from './tech.js';
-import toTitleCase from '../utils/to-title-case.js';
-import mergeOptions from '../utils/merge-options.js';
-
-/**
- * The `MediaLoader` is the `Component` that decides which playback technology to load
- * when a player is initialized.
- *
- * @extends Component
- */
-class MediaLoader extends Component {
-
-  /**
-   * Create an instance of this class.
-   *
-   * @param {Player} player
-   *        The `Player` that this class should attach to.
-   *
-   * @param {Object} [options]
-   *        The key/value stroe of player options.
-   *
-   * @param {Component~ReadyCallback} [ready]
-   *        The function that is run when this component is ready.
-   */
-  constructor(player, options, ready) {
-    // MediaLoader has no element
-    const options_ = mergeOptions({createEl: false}, options);
-
-    super(player, options_, ready);
-
-    // If there are no sources when the player is initialized,
-    // load the first supported playback technology.
-
-    if (!options.playerOptions.sources || options.playerOptions.sources.length === 0) {
-      for (let i = 0, j = options.playerOptions.techOrder; i &lt; j.length; i++) {
-        const techName = toTitleCase(j[i]);
-        let tech = Tech.getTech(techName);
-
-        // Support old behavior of techs being registered as components.
-        // Remove once that deprecated behavior is removed.
-        if (!techName) {
-          tech = Component.getComponent(techName);
-        }
-
-        // Check if the browser supports this technology
-        if (tech &amp;&amp; tech.isSupported()) {
-          player.loadTech_(techName);
-          break;
-        }
-      }
-    } else {
-      // Loop through playback technologies (HTML5, Flash) and check for support.
-      // Then load the best source.
-      // A few assumptions here:
-      //   All playback technologies respect preload false.
-      player.src(options.playerOptions.sources);
-    }
+        <article class="readme">
+            <h1>Using Webpack with Video.js</h1><p>video.js, and the playback technologies such as videojs-contrib-hls all work in a Webpack based build environment. Here are several configuration changes specific to Webpack that will get you up and running.</p>
+<h2>Video.js CSS:</h2><p>To add the CSS that the player requires, simply add
+<code>require('!style-loader!css-loader!video.js/dist/video-js.css')</code> to the file where the player is also included or initialized.</p>
+<h2>Handling .eot files in Webpack</h2><p>In addition to this, you may run into a problem where Webpack does not know how to load .eot files required for IE8 support by default. This can be solved by installing the file-loader and url-loader packages. Install them by running:
+<code>npm install --save-dev file-loader url-loader</code></p>
+<p>With both packages installed, simply add the following to you webpack.config file in the 'loaders' section:</p>
+<pre class="prettyprint source"><code>{
+  loader: 'url-loader?limit=100000',
+  test: /\.(png|woff|woff2|eot|ttf|svg)$/
+}</code></pre><h2>Using Webpack with videojs-contrib-hls</h2><p>Import the HLS library with a line such as:
+<code>import * as HLS from 'videojs-contrib-hls';</code></p>
+<p>In order to use the tech, we must also introduce webworkers with the package 'webworkify-webpack-dropin', run:
+<code>npm install --save-dev webworkify-webpack-dropin</code></p>
+<p>To utilize this in your page, simply create an alias in your webpack.config.js file with:</p>
+<pre class="prettyprint source"><code>resolve: {
+  alias: {
+    webworkify: 'webworkify-webpack-dropin'
   }
-}
-
-Component.registerComponent('MediaLoader', MediaLoader);
-export default MediaLoader;
-</code></pre>
+}</code></pre><p>Source maps that use the 'eval' tag are not compatible with webworkify, so this may need to be changed also. Source maps such as 'cheap-eval-module-source-map' should be changed to 'cheap-source-map' or anything else that fits your build without using 'eval' source maps.</p>
         </article>
-    </section>
-
+    
+</section>
 
 
 
@@ -146,13 +100,7 @@ export default MediaLoader;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>

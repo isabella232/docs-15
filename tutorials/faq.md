@@ -59,13 +59,15 @@ video.js is an extendable framework/library around the native video element. It 
 
 ## Q: How do I install video.js?
 
-Currently video.js can be installed using bower, npm, serving a release file from
+Currently video.js can be installed using npm, serving a release file from
 a github tag, or even using a CDN hosted version. For information on doing any of those
 see the [install guide][install-guide].
 
 ## Q: Is video.js on bower?
 
-Yes! See the [install guide][install-guide] for more information.
+Versions prior to video.js 6 do support bower, however, as of video.js 6, bower is no
+longer officially supported. Please see https://github.com/videojs/video.js/issues/4012
+for more information.
 
 ## Q: What do video.js version numbers mean?
 
@@ -266,67 +268,68 @@ Yes! Please [submit an issue or open a pull request][pr-issue-question] if this 
 
 Yes! Please [submit an issue or open a pull request][pr-issue-question] if this does not work.
 
-Be sure to use `require('!style-loader!css-loader!video.js/dist/video-js.css')` to inject video.js CSS.
+We have a short guide that deals with small configurations that you will need to do. [Webpack and Videojs Configuration][webpack-guide].
 
 ## Q: Does video.js work with react?
 
 Yes! See [ReactJS integration example][react-guide].
 
-[reduced-test-case]: https://css-tricks.com/reduced-test-cases/
-
-[react-guide]: tutorial-react.html
-
-[plugin-guide]: tutorial-plugins.html
-
-[install-guide]: http://videojs.com/getting-started/
-
-[troubleshooting]: tutorial-troubleshooting.html
-
-[video-tracks]: tutorial-video-tracks.html
-
-[audio-tracks]: tutorial-audio-tracks.html
-
-[text-tracks]: tutorial-text-tracks.html
-
-[debug-guide]: tutorial-debugging.html
-
-[pr-issue-question]: #q-i-think-i-found-a-bug-with-videojs-or-i-want-to-add-a-feature-what-should-i-do
-
-[hls]: http://github.com/videojs/videojs-contrib-hls
-
-[flash]: https://github.com/videojs/videojs-flash
-
-[dash]: http://github.com/videojs/videojs-contrib-dash
-
-[eme]: https://github.com/videojs/videojs-contrib-eme
-
-[generator]: https://github.com/videojs/generator-videojs-plugin
-
-[youtube]: https://github.com/videojs/videojs-youtube
-
-[vimeo]: https://github.com/videojs/videojs-vimeo
-
 [ads]: https://github.com/videojs/videojs-contrib-ads
 
-[pr-template]: http://github.com/videojs/video.js/blob/master/.github/PULL_REQUEST_TEMPLATE.md
-
-[issue-template]: http://github.com/videojs/video.js/blob/master/.github/ISSUE_TEMPLATE.md
-
-[plugin-list]: http://videojs.com/plugins
-
-[skins-list]: https://github.com/videojs/video.js/wiki/Skins
+[audio-tracks]: tutorial-audio-tracks.html
 
 [contributing-issues]: http://github.com/videojs/video.js/blob/master/CONTRIBUTING.md#filing-issues
 
 [contributing-prs]: http://github.com/videojs/video.js/blob/master/CONTRIBUTING.md#contributing-code
 
+[dash]: http://github.com/videojs/videojs-contrib-dash
+
+[debug-guide]: tutorial-debugging.html
+
+[eme]: https://github.com/videojs/videojs-contrib-eme
+
+[flash]: https://github.com/videojs/videojs-flash
+
+[generator]: https://github.com/videojs/generator-videojs-plugin
+
+[hls]: http://github.com/videojs/videojs-contrib-hls
+
+[install-guide]: http://videojs.com/getting-started/
+
+[issue-template]: http://github.com/videojs/video.js/blob/master/.github/ISSUE_TEMPLATE.md
+
+[npm-keywords]: https://docs.npmjs.com/files/package.json#keywords
+
+[plugin-guide]: tutorial-plugins.html
+
+[plugin-list]: http://videojs.com/plugins
+
+[pr-issue-question]: #q-i-think-i-found-a-bug-with-videojs-or-i-want-to-add-a-feature-what-should-i-do
+
+[pr-template]: http://github.com/videojs/video.js/blob/master/.github/PULL_REQUEST_TEMPLATE.md
+
+[react-guide]: tutorial-react.html
+
+[reduced-test-case]: https://css-tricks.com/reduced-test-cases/
+
+[semver]: http://semver.org/
+
+[skins-list]: https://github.com/videojs/video.js/wiki/Skins
+
+[starter-example]: http://jsbin.com/axedog/edit?html,output
+
+[text-tracks]: tutorial-text-tracks.html
+
+[troubleshooting]: tutorial-troubleshooting.html
+
+[video-tracks]: tutorial-video-tracks.html
+
+[vimeo]: https://github.com/videojs/videojs-vimeo
+
 [vjs-issues]: https://github.com/videojs/video.js/issues
 
 [vjs-prs]: https://github.com/videojs/video.js/pulls
 
-[npm-keywords]: https://docs.npmjs.com/files/package.json#keywords
+[webpack-guide]: tutorial-webpack.html
 
-[semver]: http://semver.org/
-
-[starter-example]: http://jsbin.com/axedog/edit?html,output
-
+[youtube]: https://github.com/videojs/videojs-youtube
